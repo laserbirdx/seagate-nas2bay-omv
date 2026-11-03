@@ -116,16 +116,17 @@ Debian zImage is padded to 16 MiB and the initramfs is appended at `0x3000000`; 
 `/chosen` node tells the kernel where it is.
 
 ```mermaid
-flowchart TD
-    A["U-Boot (NAND, untouched)"] -->|"reads nv_data /ubootenv"| B{"saved_entry"}
-    B -->|"0"| C["md4:/boot/uImage + DTB<br/>Debian kernel 6.1 + initramfs"]
-    B -->|"1"| F["md5: factory Seagate NAS OS"]
-    C --> D["initramfs stage 1:<br/>set saved_entry=1 (arm rollback)<br/>assemble RAID + LVM<br/>mount debian_omv.img as /"]
-    D -->|"any failure: panic, reboot"| F
-    D --> E["systemd: OMV, Samba, SSH ..."]
-    E --> G{"stage 2 health check:<br/>IPv4 on eth0 + sshd up?"}
-    G -->|"yes"| H["set saved_entry=0<br/>(Debian stays default)"]
-    G -->|"no, after 90 s"| I["set saved_entry=1 and reboot"] --> F
+flowchart LR
+    UB["U-Boot (NAND)"] -->|"entry=0"| K["Debian 6.1 (md4)<br/>Kernel + Initramfs"]
+    UB -->|"entry=1"| STK["Factory OS (md5)<br/>Safe Fallback"]
+
+    K --> INIT["Initramfs<br/>• Arms rollback=1<br/>• Mounts rootfs"]
+    INIT -->|"Mount failure"| STK
+    INIT --> SYS["systemd + OMV 7<br/>Services Start"]
+
+    SYS --> CHK{"Health Check<br/>(IPv4 + SSH)"}
+    CHK -->|"Passed"| OK["Commit Debian<br/>(saved_entry=0)"]
+    CHK -->|"Failed (90s)"| STK
 ```
 
 ---
