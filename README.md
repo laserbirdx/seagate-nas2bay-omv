@@ -6,16 +6,16 @@
 
 Run a **current, maintained Debian 12 (bookworm) with OpenMediaVault 7** on the discontinued
 **Seagate NAS 2-Bay**, installed **from the factory NAS OS over SSH** — no NAND flashing,
-no data loss, and an automatic fallback to the factory firmware if anything goes wrong.
+no wipe, and an automatic fallback to the factory firmware if anything goes wrong.
 
-Includes native OMV 7 plugins for the hardware that stock Debian does not know about:
-fan curve, all six chassis LEDs, the three chassis buttons, One-Touch USB backup and an
+Includes native OMV 7 plugins for the hardware that stock Debian:
+fan curve, all 6 chassis LEDs, the three chassis buttons, One-Touch USB backup and an
 interactive hardware dashboard widget (English + Turkish).
 
 > [!WARNING]
 > This is a community project, not supported by Seagate or OpenMediaVault. It has been
 > developed and tested on **one** unit (2 × 4 TB, RAID 1). Back up important data before
-> installing. A 3.3 V USB-UART adapter is strongly recommended for recovery.
+> installing. A 3.3 V USB-UART adapter for recovery. No need for install.
 
 ---
 
@@ -77,31 +77,24 @@ Factory disk layout (identical on both disks, mdadm metadata 1.0) — this proje
 | Security updates | none (product discontinued) | Debian security + OMV updates via `apt` |
 | Web UI | Seagate NAS OS | **OpenMediaVault 7** (Sandworm) |
 | File sharing | old Samba / AFP | Samba 4.17 (SMB2/SMB3), NFS, rsync, SSH/SFTP |
-| RAM in use at idle | ≈ 250 MB | ≈ 105 MB with OMV running (≈ 60 MB plain Debian) |
-| USB 3.0 controller | yes | yes (PCIe enabled and fixed in the device tree) |
+| RAM in use at idle | ≈ 250 MB | ≈ 105 MB with OMV running |
+| USB 3.0 controller | yes | yes |
 | Fan control | fixed firmware logic | configurable curve or fixed speed from the web UI |
 | LEDs / buttons | fixed functions | every LED and button configurable (short / long press) |
-| Package ecosystem | none | full Debian armhf archive |
+| Package ecosystem | Package Store Closed | full Debian armhf archive |
 | Recovery | NAND rescue | NAND rescue **plus** automatic fallback to the factory OS |
 
 ---
 
 ## Performance & optimizations
 
-The Marvell Armada 370 is a single-core 1.2 GHz ARMv7 processor with 512 MB of DDR3 RAM. A generic, unoptimized Linux distribution will quickly saturate the single core with background polling, trigger excessive `fsync()` stalls on mechanical disks, and cause out-of-memory or watchdog resets. 
-
+The Marvell Armada 370 is a single-core 1.2 GHz ARMv7 processor with 512 MB of DDR3 RAM. 
 This repository includes custom hardware tuning to ensure smooth, responsive performance with idle CPU usage under 1% and idle RAM below 110 MB:
 
 ### 1. Storage & `fsync` throughput optimizations
 
 - **`fsync()` stall prevention (`eatmydata` for package management):** Heavy apt and dpkg operations execute through `eatmydata`, bypassing synchronous per-file disk syncs. This prevents package installations and upgrades from locking up the single core or tripping the hardware watchdog.
-- **I/O scheduler tuned for mechanical drives:** Disks use `mq-deadline` (or `bfq` with low-latency mode disabled) to prioritize sequential throughput and prevent head thrashing between concurrent background reads and writes.
 - **`noatime` & writeback caching:** Both the loop-mounted rootfs and data volumes are mounted with `noatime`, eliminating metadata writes on every file read.
-- **Linux VM dirty page writeback tuning:**
-  - `vm.dirty_background_ratio = 5` and `vm.dirty_ratio = 10` ensure buffered writes are streamed to disk continuously in the background instead of waiting for huge dirty bursts that cause system-wide I/O pauses.
-  - `vm.vfs_cache_pressure = 50` keeps directory and inode entries in memory longer, significantly speeding up network folder navigation and SMB file listings.
-  - `vm.swappiness = 10` prevents aggressive swapping to slow mechanical disk arrays.
-- **Silicon XOR engine offloading (`mv_xor`):** The SoC's dedicated Marvell XOR DMA channels are utilized by the kernel for RAID 1 parity calculations and block copies, offloading memory operations from the CPU.
 
 ### 2. Low-memory tuning & disabled background services
 
@@ -113,16 +106,6 @@ To reserve the maximum amount of RAM for disk caching and file transfers, heavy 
 - **`postfix` MTA masked:** Local mail transfer agent daemon is disabled, saving memory and socket overhead.
 - **Samba ARM tuning:** Configured with `socket options = TCP_NODELAY`, `aio read/write size = 16384`, and `use sendfile = yes` to maximize single-stream Gigabit Ethernet throughput.
 - **Systemd journal rate limiting:** Disk-bound journal writes are rate-limited to avoid write latency spikes.
-
-### 3. Stability & hardware watchdog integration
-
-- **Hardware watchdog (`/dev/watchdog`):** Systemd actively pets the Marvell Orion hardware watchdog, with `RuntimeWatchdogSec=30s` configured so that heavy sequential disk synchronizations do not falsely trigger a hardware reset while still guaranteeing automatic recovery in case of a kernel lockup.
-- **Mainline device tree stability fixes:**
-  - **CESA crypto disabled in DTB:** The Marvell CESA hardware crypto accelerator causes idle hangs and kernel panics on mainline Armada 370 kernels. Software crypto is used instead, ensuring 100% long-term stability.
-  - **MBus SRAM & SATA clock gating:** Unused SoC IP blocks and clocks are dynamically gated to reduce heat and power consumption.
-  - **White disk LEDs (`mpp48` / `mpp57`) muxed to GPIO:** Configured so they can be switched and manipulated by user software rather than being hardwired to proprietary SATA controller logic.
-
----
 
 ## What you get
 
@@ -136,7 +119,7 @@ To reserve the maximum amount of RAM for disk caching and file transfers, heavy 
 
 ## How it boots
 
-The stock U-Boot (left untouched in NAND) reads `/ubootenv` from the `nv_data` partition:
+The stock U-Boot reads `/ubootenv` from the `nv_data` partition:
 `saved_entry=0` boots `root_1` (md4), `saved_entry=1` boots `root_2` (md5, factory OS),
 and after 3 failed attempts (`boot_count >= 3`) it starts the NAND rescue system.
 U-Boot runs `bootm 0x2000000 - 0x6000000` and never loads a separate initrd, so the
@@ -302,7 +285,7 @@ are translated to English and Turkish.
 - Note: the white light behind the Sync button is hard-wired to the power rail and cannot be switched.
 
 ### Chassis Buttons — *Services → Chassis Buttons*
-Short and long press (2/3/5 s) actions for **Sync**, **Power** and **Reset**:
+Short and long press actions for **Sync**, **Power** and **Reset**:
 toggle stealth mode, One-Touch USB backup, unmount USB drives, fan turbo, restart Samba,
 restart networking, reboot, power off, or nothing.
 
