@@ -9,8 +9,15 @@ INDEX=/var/www/openmediavault/index.html
 
 VER=$(dpkg-query -W -f='${Version}' openmediavault-seagate-nas2bay 2>/dev/null || echo 1)
 
-# Always strip previous injections first (idempotent)
-sed -i '/seagate-chassis\.\(css\|js\)/d' "$INDEX"
+# Ensure the main OMV stylesheet is never lost
+STYLE=$(ls /var/www/openmediavault/styles.*.css 2>/dev/null | head -n1 | xargs -r basename || true)
+if [ -n "$STYLE" ] && ! grep -q "$STYLE" "$INDEX"; then
+    sed -i "s#</head>#<link rel=\"stylesheet\" href=\"$STYLE\">\n</head>#" "$INDEX"
+fi
+
+# Cleanly remove existing injection by matching only our exact tags (do not delete whole line)
+sed -i 's#<link [^>]*seagate-chassis\.css[^>]*>##g' "$INDEX"
+sed -i 's#<script [^>]*seagate-chassis\.js[^>]*></script>##g' "$INDEX"
 
 if [ "$1" = "--remove" ]; then
     exit 0
