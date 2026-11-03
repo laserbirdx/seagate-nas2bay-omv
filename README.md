@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.jpg" alt="OpenMediaVault + Seagate NAS 2-Bay" width="100%">
+</p>
+
 # Debian 12 + OpenMediaVault 7 for the Seagate NAS 2-Bay (SRPD20 / n090201)
 
 Run a **current, maintained Debian 12 (bookworm) with OpenMediaVault 7** on the discontinued
@@ -7,12 +11,6 @@ no data loss, and an automatic fallback to the factory firmware if anything goes
 Includes native OMV 7 plugins for the hardware that stock Debian does not know about:
 fan curve, all six chassis LEDs, the three chassis buttons, One-Touch USB backup and an
 interactive hardware dashboard widget (English + Turkish).
-
-<p align="center">
-  <img src="assets/nas_front.png" height="260" alt="Seagate NAS 2-Bay front">
-  &nbsp;&nbsp;
-  <img src="assets/nas_rear.png" height="260" alt="Seagate NAS 2-Bay rear">
-</p>
 
 > [!WARNING]
 > This is a community project, not supported by Seagate or OpenMediaVault. It has been

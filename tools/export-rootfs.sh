@@ -120,7 +120,7 @@ for d in proc sys dev; do mount --bind "/$d" "$STAGE/$d"; done
 trap 'for d in dev sys proc; do umount "$STAGE/$d" 2>/dev/null || true; done' EXIT
 rm -f "boot/initrd.img-$KVER"
 chroot "$STAGE" env TMPDIR=/var/tmp update-initramfs -c -k "$KVER"
-chroot "$STAGE" /usr/sbin/seagate-mkuimage --no-install "$KVER"
+chroot "$STAGE" env TMPDIR=/var/tmp /usr/sbin/seagate-mkuimage --no-install "$KVER"
 for d in dev sys proc; do umount "$STAGE/$d"; done
 trap - EXIT
 
