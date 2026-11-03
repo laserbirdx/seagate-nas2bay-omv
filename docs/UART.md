@@ -16,14 +16,25 @@ does not reach the network.
 Terminal programs: PuTTY / KiTTY (Windows), `picocom -b 115200 /dev/ttyUSB0`,
 `screen /dev/ttyUSB0 115200` (Linux/macOS).
 
-## Header location
+## Header location & pinout
 
-The header sits on the left edge of the mainboard (seen from the front), reachable after
-sliding the chassis cover off. Identify the pins with a multimeter before connecting:
-GND has continuity to the USB shield, TX idles at ≈ 3.3 V and flickers during boot, RX
-idles at ≈ 3.3 V, VCC is a steady 3.3 V (leave it unconnected).
+The 4-pin UART header is located at the top-right corner of the mainboard (when viewed with the SATA backplane facing up), reachable after sliding the metal chassis cover off.
 
-<!-- TODO: add photo docs/img/uart-header.jpg with the pinout -->
+<p align="center">
+  <img src="img/uart-header.jpg" alt="Seagate NAS 2-Bay UART header connection" width="500">
+</p>
+
+### Pinout (from left to right in the photo)
+
+| Pin | Wire Color (Photo) | Signal | Connection to USB-UART Adapter |
+| :---: | :---: | :---: | :--- |
+| **1** | **Yellow** | **GND** | Connect to USB-UART **GND** |
+| **2** | **Green** | **TX** | Connect to USB-UART **RX** (Board transmits to PC) |
+| **3** | **Blue** | **RX** | Connect to USB-UART **TX** (Board receives from PC) |
+| **4** | *(Unconnected)* | **VCC (3.3V)** | **DO NOT CONNECT** (Powering the board externally can damage the SoC) |
+
+> [!WARNING]
+> Use a **3.3 V TTL** USB-UART adapter only (FT232RL, CP2102, CH340G set to 3.3 V). Never connect the 5 V or 3.3 V VCC pin from the adapter to the board — the board is already powered by its internal 12 V/5 V/3.3 V regulators.
 
 ## Boot sequence on the console
 
