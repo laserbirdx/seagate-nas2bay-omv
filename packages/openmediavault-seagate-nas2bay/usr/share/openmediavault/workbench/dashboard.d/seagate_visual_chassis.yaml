@@ -1,0 +1,20 @@
+version: "1.0"
+type: dashboard-widget
+data:
+  id: "d4c5b6a7-8901-4234-a567-890123456789"
+  type: grid
+  title: _("Seagate NAS 2-Bay Visual Overview")
+  description: _("Interactive front and rear chassis view with hover hardware details")
+  permissions:
+    role:
+      - admin
+  grid:
+    item:
+      class: "omv-grid-cols-1 seagate-visual-widget-marker"
+      title: "{{ title }}"
+      content: "{{ value }}"
+    store:
+      proxy:
+        service: FanControl
+        get:
+          method: getGridItems

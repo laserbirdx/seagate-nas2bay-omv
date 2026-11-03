@@ -1,0 +1,48 @@
+#!/bin/sh
+# postinst for openmediavault-seagate-nas2bay
+set -e
+
+SHARE=/usr/share/openmediavault-seagate-nas2bay
+
+migrate_legacy() {
+    # Files from the original hand-made installation (pre-package)
+    if [ -f /etc/systemd/system/seagate-fan.service ]; then
+        systemctl disable --now seagate-fan.service >/dev/null 2>&1 || true
+        rm -f /etc/systemd/system/seagate-fan.service
+    fi
+    rm -f /usr/local/sbin/seagate-fan-daemon
+    rm -f /usr/share/openmediavault/locale/tr_TR/openmediavault-seagate-fan.po
+    rm -f /usr/share/openmediavault/workbench/dashboard.d/seagate_visual_chassis_wide.yaml
+}
+
+install_defaults() {
+    for f in seagate-fan.json seagate-led.json seagate-buttons.json; do
+        [ -f "/etc/$f" ] || cp "$SHARE/defaults/$f" "/etc/$f"
+    done
+}
+
+case "$1" in
+    configure)
+        migrate_legacy
+        install_defaults
+        "$SHARE/webui-inject" || true
+        systemctl daemon-reload || true
+        systemctl enable seagate-nas2bay-hwd.service >/dev/null 2>&1 || true
+        systemctl restart seagate-nas2bay-hwd.service || true
+        if command -v omv-mkworkbench >/dev/null 2>&1; then
+            omv-mkworkbench all >/dev/null 2>&1 || true
+        fi
+        # Reload the OMV engine so the new RPC services are registered
+        if command -v deb-systemd-invoke >/dev/null 2>&1; then
+            deb-systemd-invoke restart openmediavault-engined.service >/dev/null 2>&1 || true
+        else
+            systemctl restart openmediavault-engined.service >/dev/null 2>&1 || true
+        fi
+        ;;
+    triggered)
+        # openmediavault (re)installed index.html -> re-inject our widget assets
+        "$SHARE/webui-inject" || true
+        ;;
+esac
+
+exit 0

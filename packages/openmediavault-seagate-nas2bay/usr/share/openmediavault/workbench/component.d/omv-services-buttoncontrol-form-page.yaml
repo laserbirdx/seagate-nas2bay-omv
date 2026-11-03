@@ -1,0 +1,171 @@
+version: "1.0"
+type: component
+data:
+  name: omv-services-buttoncontrol-form-page
+  type: formPage
+  config:
+    request:
+      service: ButtonControl
+      get:
+        method: getSettings
+      post:
+        method: setSettings
+    fields:
+      - type: textInput
+        name: status_info
+        label: _("Last Button Event & Backup Path Preview")
+        readonly: true
+        disabled: true
+      - type: divider
+        title: _("General Button Hold & LED Feedback")
+      - type: select
+        name: long_press_sec
+        label: _("Long Press Hold Duration")
+        hint: _("How many seconds a button must be held down to trigger its Long Press action.")
+        value: 2
+        store:
+          data:
+            - [2, _("2 Seconds (Recommended)")]
+            - [3, _("3 Seconds")]
+            - [5, _("5 Seconds")]
+      - type: checkbox
+        name: led_feedback
+        label: _("Blink Power LED on Button Press")
+        hint: _("Briefly flashes the front white Power LED to confirm when a Short Press or Long Press action is triggered.")
+        value: true
+      - type: divider
+        title: _("One-Touch USB Backup Settings (Directory, Prefix/Suffix, LEDs & Post-Action)")
+      - type: sharedFolderSelect
+        name: usb_backup_sharedfolderref
+        label: _("Destination Shared Folder")
+        hint: _("OpenMediaVault shared folder that will receive the USB backup files.")
+        hasEmptyOption: true
+        value: ""
+      - type: textInput
+        name: usb_backup_subdir
+        label: _("Destination Subfolder Path")
+        hint: _("Subfolder inside the selected share (e.g. 'USB_Backup' or 'Backups/Flash'). Leave empty to copy directly into the share root.")
+        value: "USB_Backup"
+      - type: select
+        name: usb_backup_mode
+        label: _("Backup Folder Creation Mode")
+        value: "timestamp_folder"
+        store:
+          data:
+            - ["timestamp_folder", _("Create New Folder Every Time (Prefix + Timestamp + Suffix)")]
+            - ["sync_overwrite", _("Copy Into Single Fixed Folder (Overwrite Existing Files)")]
+      - type: textInput
+        name: usb_backup_prefix
+        label: _("Folder Name Prefix")
+        hint: _("Text added at the beginning of the backup folder name (e.g. 'USB_' or 'Flash_').")
+        value: "USB_"
+      - type: select
+        name: usb_backup_timestamp_fmt
+        label: _("Folder Timestamp Format")
+        value: "YYYYMMDD_HHMMSS"
+        store:
+          data:
+            - ["YYYYMMDD_HHMMSS", _("Date & Time Compact (20261103_104500)")]
+            - ["YYYY-MM-DD_HH-MM", _("Date & Time Dashed (2026-11-03_10-45)")]
+            - ["YYYY-MM-DD", _("Date Only (2026-11-03)")]
+            - ["none", _("No Timestamp (Prefix + Suffix Only)")]
+      - type: textInput
+        name: usb_backup_suffix
+        label: _("Folder Name Suffix")
+        hint: _("Text added at the end of the backup folder name (e.g. '_Backup' or '_Yedek').")
+        value: "_Backup"
+      - type: select
+        name: usb_led_during
+        label: _("LED Notification While Copying")
+        hint: _("How the chassis LEDs behave while USB files are actively being copied to the NAS.")
+        value: "blink_white_power"
+        store:
+          data:
+            - ["blink_white_power", _("Blink Front White Power LED")]
+            - ["blink_all_white", _("Blink White Power LED + Disk 1/2 White LEDs")]
+            - ["alternate_white_red", _("Blink White & Red Power LEDs (High Visibility)")]
+            - ["none", _("Do Not Change LEDs During Copy")]
+      - type: select
+        name: usb_led_complete
+        label: _("LED Notification When Copy Finishes")
+        hint: _("How the chassis LEDs signal that the USB backup has completed (on error, Red Power LED flashes 5 times).")
+        value: "flash_3x_restore"
+        store:
+          data:
+            - ["flash_3x_restore", _("Flash All White LEDs 3 Times then Restore Normal LEDs")]
+            - ["solid_white_restore", _("Keep White Power LED Solid ON for 10s then Restore")]
+            - ["turn_off_all", _("Turn Off All Chassis LEDs After Backup (Stealth Mode)")]
+            - ["restore_only", _("Immediately Restore Previous LED Settings")]
+      - type: select
+        name: usb_post_action
+        label: _("Post-Backup Device & System Behavior")
+        hint: _("Action to perform automatically once the USB backup finishes and disk caches are synced.")
+        value: "eject_usb"
+        store:
+          data:
+            - ["eject_usb", _("Safely Unmount & Eject USB Drive (Recommended)")]
+            - ["keep_mounted", _("Keep USB Drive Mounted")]
+            - ["eject_and_leds_off", _("Safely Eject USB Drive & Turn Off All Chassis LEDs")]
+            - ["eject_and_poweroff", _("Safely Eject USB Drive & Shut Down NAS (Power Off)")]
+            - ["eject_and_reboot", _("Safely Eject USB Drive & Reboot NAS")]
+      - type: divider
+        title: _("Front Sync Button (Lower Button with Circular Arrow Icon)")
+      - type: select
+        name: sync_short_action
+        label: _("Sync Button — Normal Press (Short Press)")
+        value: "toggle_leds"
+        store: &actions
+          data:
+            - ["toggle_leds", _("Toggle Stealth Mode (All LEDs ON / OFF)")]
+            - ["usb_backup", _("One-Touch USB Backup (Copy USB Drive to NAS Share)")]
+            - ["safe_eject_usb", _("Safely Unmount All Connected USB Drives")]
+            - ["fan_boost_toggle", _("Toggle Fan Turbo Mode (1800 RPM Max / Auto)")]
+            - ["restart_smb", _("Restart SMB/CIFS File Sharing Service")]
+            - ["reset_network_dhcp", _("Renew Network IP & Restart eth0 Interface")]
+            - ["reboot", _("Safe System Reboot (Restart NAS)")]
+            - ["poweroff", _("Safe System Shutdown (Power Off NAS)")]
+            - ["none", _("Do Nothing (Disabled)")]
+      - type: select
+        name: sync_long_action
+        label: _("Sync Button — Long Press (Hold)")
+        value: "usb_backup"
+        store: *actions
+      - type: divider
+        title: _("Front Power Button (Upper Button with Power Icon)")
+      - type: select
+        name: power_short_action
+        label: _("Power Button — Normal Press (Short Press)")
+        value: "fan_boost_toggle"
+        store: *actions
+      - type: select
+        name: power_long_action
+        label: _("Power Button — Long Press (Hold)")
+        value: "poweroff"
+        store: *actions
+      - type: divider
+        title: _("Rear Reset Button (Rear Panel Pinhole Button)")
+      - type: select
+        name: reset_short_action
+        label: _("Reset Button — Normal Press (Short Press)")
+        value: "restart_smb"
+        store: *actions
+      - type: select
+        name: reset_long_action
+        label: _("Reset Button — Long Press (Hold)")
+        value: "reset_network_dhcp"
+        store: *actions
+    buttons:
+      - template: submit
+      - text: _("Run USB Backup Now")
+        class: omv-background-color-pair-blue
+        execute:
+          type: request
+          request:
+            service: ButtonControl
+            method: runUsbBackupNow
+            progressMessage: _("Starting One-Touch USB Backup ...")
+            successNotification: _("One-Touch USB Backup started in the background.")
+      - template: cancel
+        execute:
+          type: url
+          url: /dashboard

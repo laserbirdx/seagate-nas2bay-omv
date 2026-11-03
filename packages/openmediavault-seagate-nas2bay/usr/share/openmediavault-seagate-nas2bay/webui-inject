@@ -1,0 +1,21 @@
+#!/bin/sh
+# Inject (or remove) the Seagate NAS 2-Bay dashboard widget assets into the
+# OpenMediaVault web UI. index.html is owned by the openmediavault package and
+# is replaced on every OMV upgrade, so this runs from a dpkg trigger.
+set -e
+
+INDEX=/var/www/openmediavault/index.html
+[ -f "$INDEX" ] || exit 0
+
+VER=$(dpkg-query -W -f='${Version}' openmediavault-seagate-nas2bay 2>/dev/null || echo 1)
+
+# Always strip previous injections first (idempotent)
+sed -i '/seagate-chassis\.\(css\|js\)/d' "$INDEX"
+
+if [ "$1" = "--remove" ]; then
+    exit 0
+fi
+
+TAG="<link rel=\"stylesheet\" href=\"assets/seagate-chassis.css?v=${VER}\"><script src=\"assets/seagate-chassis.js?v=${VER}\" defer></script>"
+sed -i "s#</head>#${TAG}\n</head>#" "$INDEX"
+exit 0

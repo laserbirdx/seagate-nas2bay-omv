@@ -1,0 +1,11 @@
+{
+    "preset_mode": "normal",
+    "led_white_power": "on",
+    "led_red_power": "off",
+    "led_white_sata": "disk-activity",
+    "led_red_sata": "off",
+    "schedule_enabled": false,
+    "off_start_hour": 23,
+    "off_end_hour": 7,
+    "sync_button_toggle": true
+}

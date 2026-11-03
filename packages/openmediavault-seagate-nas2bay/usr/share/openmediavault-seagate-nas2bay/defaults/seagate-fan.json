@@ -1,0 +1,8 @@
+{
+    "mode": "auto",
+    "manual_rpm": 1400,
+    "manual_pwm": 170,
+    "temp_low": 42,
+    "temp_med": 50,
+    "temp_high": 58
+}

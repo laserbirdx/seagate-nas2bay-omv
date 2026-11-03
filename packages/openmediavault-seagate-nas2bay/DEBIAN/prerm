@@ -1,0 +1,12 @@
+#!/bin/sh
+# prerm for openmediavault-seagate-nas2bay
+set -e
+
+case "$1" in
+    remove|deconfigure)
+        systemctl disable --now seagate-nas2bay-hwd.service >/dev/null 2>&1 || true
+        /usr/share/openmediavault-seagate-nas2bay/webui-inject --remove || true
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,11 @@
+#!/bin/sh
+# prerm for seagate-nas2bay-boot
+set -e
+case "$1" in
+    remove|deconfigure)
+        systemctl disable seagate-boot-healthcheck.service seagate-nas2bay-firstboot.service >/dev/null 2>&1 || true
+        echo "WARNING: removing seagate-nas2bay-boot. The current uImage on /dev/md4 keeps working,"
+        echo "         but future kernel/initramfs updates will no longer be bootable."
+        ;;
+esac
+exit 0

@@ -1,0 +1,256 @@
+#!/bin/sh
+
+export PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+[ -d /dev ] || mkdir -m 0755 /dev
+[ -d /root ] || mkdir -m 0700 /root
+[ -d /sys ] || mkdir /sys
+[ -d /proc ] || mkdir /proc
+[ -d /tmp ] || mkdir /tmp
+mkdir -p /var/lock
+mount -t sysfs -o nodev,noexec,nosuid sysfs /sys
+mount -t proc -o nodev,noexec,nosuid proc /proc
+
+# Immediate kernel panic auto-reboot (10 seconds)
+echo 10 > /proc/sys/kernel/panic 2>/dev/null || true
+echo 1 > /proc/sys/kernel/panic_on_oops 2>/dev/null || true
+
+for x in $(cat /proc/cmdline); do
+	case $x in
+	initramfs.clear)
+		clear
+		;;
+	quiet)
+		quiet=y
+		;;
+	esac
+done
+
+if [ "$quiet" != "y" ]; then
+	quiet=n
+	echo "Loading Debian 12 (Seagate NAS Fail-Safe Boot), please wait..."
+fi
+export quiet
+
+mount -t devtmpfs -o nosuid,mode=0755 udev /dev
+
+[ ! -h /dev/fd ] && ln -s /proc/self/fd /dev/fd
+[ ! -h /dev/stdin ] && ln -s /proc/self/fd/0 /dev/stdin
+[ ! -h /dev/stdout ] && ln -s /proc/self/fd/1 /dev/stdout
+[ ! -h /dev/stderr ] && ln -s /proc/self/fd/2 /dev/stderr
+
+mkdir /dev/pts
+mount -t devpts -o noexec,nosuid,gid=5,mode=0620 devpts /dev/pts || true
+
+export DPKG_ARCH=
+. /conf/arch.conf
+
+export MODPROBE_OPTIONS="-qb"
+
+export ROOT=
+export ROOTDELAY=
+export ROOTFLAGS=
+export ROOTFSTYPE=
+export IP=
+export DEVICE=
+export BOOT=local
+export BOOTIF=
+export UBIMTD=
+export break=
+export init=/sbin/init
+export readonly=n
+export rootmnt=/root
+export debug=
+export panic=10
+export blacklist=
+export resume=
+export resume_offset=
+export noresume=y
+export drop_caps=
+export fastboot=n
+export forcefsck=n
+export fsckfix=
+
+. /conf/initramfs.conf
+for conf in conf/conf.d/*; do
+	[ -f "${conf}" ] && . "${conf}"
+done
+. /scripts/functions
+
+for x in $(cat /proc/cmdline); do
+	case $x in
+	init=*)
+		init=${x#init=}
+		;;
+	root=*)
+		ROOT=${x#root=}
+		;;
+	boot=UUID=*)
+		BOOT=local
+		;;
+	boot=*)
+		BOOT=${x#boot=}
+		;;
+	panic=*)
+		panic="${x#panic=}"
+		;;
+	esac
+done
+
+if [ -z "${BOOT}" ]; then
+	BOOT=local
+fi
+
+mount -t tmpfs -o "nodev,noexec,nosuid,size=${RUNSIZE:-10%},mode=0755" tmpfs /run
+mkdir -m 0700 /run/initramfs
+
+log_begin_msg "Loading essential drivers synchronously"
+for mod in orion_wdt softdog sata_mv sd_mod md_mod raid1 dm_mod loop ext2 ext3 ext4 crc32c_generic mvmdio marvell mvneta gpio_fan leds_gpio; do
+	/sbin/modprobe $mod 2>/dev/null || true
+done
+load_modules
+log_end_msg
+
+run_scripts /scripts/init-top
+
+# Start 90s hardware watchdog feeder for initramfs phase
+if [ -c /dev/watchdog ]; then
+	(
+		w_i=0
+		while [ $w_i -lt 30 ] && [ ! -f /run/initramfs/wdt.stop ]; do
+			echo 1
+			sleep 3
+			w_i=$((w_i + 1))
+		done
+		if [ -f /run/initramfs/wdt.stop ]; then
+			printf "V"
+		fi
+	) > /dev/watchdog 2>/dev/null &
+fi
+
+starttime="$(_uptime)"
+starttime=$((starttime + 1))
+export starttime
+
+log_begin_msg "Running /scripts/init-premount"
+run_scripts /scripts/init-premount
+log_end_msg
+
+# STEP 1: ARM FAIL-SAFE ROLLBACK TO FACTORY OS (saved_entry=1, boot_count=0)
+log_begin_msg "Arming Fail-Safe Auto-Rollback to Factory OS (slot 1)"
+w=0
+while [ $w -lt 15 ]; do
+	[ -b /dev/sda3 ] && [ -b /dev/sdb3 ] && break
+	sleep 1
+	w=$((w + 1))
+done
+mkdir -p /tmp/nv_rollback
+for nvdev in /dev/sdb3 /dev/sda3; do
+	if [ -b "$nvdev" ]; then
+		if /bin/mount.util-linux -t ext2 "$nvdev" /tmp/nv_rollback 2>/dev/null || mount -t ext2 "$nvdev" /tmp/nv_rollback 2>/dev/null; then
+			cat /etc/ubootenv.slot1 > /tmp/nv_rollback/ubootenv
+			sync
+			umount /tmp/nv_rollback 2>/dev/null || true
+		fi
+	fi
+done
+log_end_msg
+
+# STEP 2: ASSEMBLE RAID & LVM AND MOUNT 32GB LOOP IMAGE
+log_begin_msg "Assembling RAID arrays and LVM volume"
+/sbin/mdadm --assemble --scan 2>/dev/null || true
+/sbin/lvm vgchange -ay --noudevsync vg 2>/dev/null || /sbin/lvm vgchange -ay 2>/dev/null || true
+/sbin/lvm vgmknodes 2>/dev/null || true
+
+VG_DEV=""
+w=0
+while [ $w -lt 25 ]; do
+	if [ -b /dev/mapper/vg-lv ]; then
+		VG_DEV="/dev/mapper/vg-lv"
+		break
+	elif [ -b /dev/vg/lv ]; then
+		VG_DEV="/dev/vg/lv"
+		break
+	elif [ -b /dev/dm-0 ]; then
+		VG_DEV="/dev/dm-0"
+		break
+	fi
+	/sbin/mdadm --assemble --scan 2>/dev/null || true
+	/sbin/lvm vgchange -ay --noudevsync 2>/dev/null || /sbin/lvm vgchange -ay 2>/dev/null || true
+	/sbin/lvm vgmknodes 2>/dev/null || true
+	sleep 1
+	w=$((w + 1))
+done
+log_end_msg
+
+if [ -z "$VG_DEV" ]; then
+	panic "FAILSAFE: LVM volume vg-lv / dm-0 did not appear! Rebooting to Factory OS..."
+fi
+
+mkdir -p /dev/mapper
+[ ! -e /dev/mapper/vg-lv ] && ln -sf "$VG_DEV" /dev/mapper/vg-lv 2>/dev/null || true
+
+mkdir -p /host_vg
+if ! /bin/mount.util-linux -t ext4 -o rw,noatime "$VG_DEV" /host_vg 2>/dev/null; then
+	if ! mount -t ext4 -o rw,noatime "$VG_DEV" /host_vg; then
+		panic "FAILSAFE: Could not mount $VG_DEV! Rebooting to Factory OS..."
+	fi
+fi
+
+echo "=== Debian 12 Initramfs Log ($(date)) ===" > /host_vg/debian_initramfs.log
+echo "Fail-safe slot 1 armed on sdb3 and sda3. Mounted $VG_DEV on /host_vg." >> /host_vg/debian_initramfs.log
+ls -la /dev/sd* /dev/md* /dev/dm* /dev/mapper/* >> /host_vg/debian_initramfs.log 2>&1 || true
+sync
+
+log_begin_msg "Mounting 32GB Debian image (/host_vg/debian_omv.img)"
+[ -b /dev/loop0 ] || mknod /dev/loop0 b 7 0 2>/dev/null || true
+/sbin/e2fsck -p /host_vg/debian_omv.img >> /host_vg/debian_initramfs.log 2>&1 || true
+/sbin/losetup /dev/loop0 /host_vg/debian_omv.img >> /host_vg/debian_initramfs.log 2>&1
+if ! /bin/mount.util-linux -t ext4 -o rw,noatime /dev/loop0 "${rootmnt}" 2>> /host_vg/debian_initramfs.log; then
+	if ! mount -t ext4 -o rw,noatime /dev/loop0 "${rootmnt}" 2>> /host_vg/debian_initramfs.log; then
+		sync
+		umount /host_vg 2>/dev/null || true
+		panic "FAILSAFE: Failed to mount /dev/loop0! Rebooting to Factory OS..."
+	fi
+fi
+log_end_msg
+
+mkdir -p "${rootmnt}/media/internal_1"
+mount -n -o move /host_vg "${rootmnt}/media/internal_1"
+echo "Rootfs mounted and /host_vg moved to ${rootmnt}/media/internal_1" >> "${rootmnt}/media/internal_1/debian_initramfs.log"
+sync
+
+log_begin_msg "Running /scripts/init-bottom"
+run_scripts /scripts/init-bottom
+log_end_msg
+
+# Cleanly release initramfs watchdog feeder so systemd can open /dev/watchdog
+touch /run/initramfs/wdt.stop
+sleep 4
+
+mount -n -o move /run ${rootmnt}/run
+
+validate_init() {
+	run-init -n "${rootmnt}" "${1}"
+}
+
+if ! validate_init "$init"; then
+	for inittest in /sbin/init /etc/init /bin/init /bin/sh; do
+		if validate_init "${inittest}"; then
+			init="$inittest"
+			break
+		fi
+	done
+fi
+
+if ! validate_init "${init}" ; then
+	panic "No init found. Rebooting to Factory OS..."
+fi
+
+unset debug MODPROBE_OPTIONS DPKG_ARCH ROOTFLAGS ROOTFSTYPE ROOTDELAY ROOT IP BOOT BOOTIF DEVICE UBIMTD blacklist break noresume panic quiet readonly resume resume_offset fastboot forcefsck fsckfix starttime
+
+mount -n -o move /sys ${rootmnt}/sys
+mount -n -o move /proc ${rootmnt}/proc
+
+exec run-init ${drop_caps} "${rootmnt}" "${init}" "$@" <"${rootmnt}/dev/console" >"${rootmnt}/dev/console" 2>&1
+panic "Something went badly wrong in the initramfs."

@@ -1,0 +1,11 @@
+# Seagate NAS 2-Bay boot configuration
+
+# Only kernels matching this shell pattern are packed into the U-Boot image.
+# The device tree in this package was validated with Debian 12's 6.1 LTS
+# kernel. Change at your own risk (UART console recommended).
+KERNEL_PATTERN="6.1.*-armmp"
+
+# Boot health check: if eth0 gets no IPv4 address or sshd is not running
+# within the timeout, switch back to the factory OS and reboot.
+HEALTHCHECK_ROLLBACK=yes
+HEALTHCHECK_TIMEOUT=90

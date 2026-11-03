@@ -1,0 +1,28 @@
+#!/bin/sh
+# postinst for seagate-nas2bay-boot
+set -e
+
+migrate_legacy() {
+    # Units/scripts from the original hand-made installation
+    for u in network-watchdog.service nas-boot-confirm.service; do
+        if [ -f "/etc/systemd/system/$u" ]; then
+            systemctl disable "$u" >/dev/null 2>&1 || true
+            rm -f "/etc/systemd/system/$u"
+        fi
+    done
+    rm -f /usr/local/sbin/nas-boot-select /usr/local/sbin/network-watchdog.sh
+    rm -f /etc/initramfs-tools/hooks/seagate-nas
+    rm -f /etc/systemd/system.conf.d/watchdog.conf
+}
+
+case "$1" in
+    configure)
+        migrate_legacy
+        systemctl daemon-reload || true
+        systemctl enable seagate-boot-healthcheck.service seagate-nas2bay-firstboot.service >/dev/null 2>&1 || true
+        echo "seagate-nas2bay-boot: to rebuild the boot image run:"
+        echo "  update-initramfs -u -k \$(uname -r) && seagate-mkuimage \$(uname -r)"
+        ;;
+esac
+
+exit 0

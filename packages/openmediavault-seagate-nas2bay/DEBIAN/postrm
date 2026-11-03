@@ -1,0 +1,18 @@
+#!/bin/sh
+# postrm for openmediavault-seagate-nas2bay
+set -e
+
+case "$1" in
+    remove)
+        systemctl daemon-reload >/dev/null 2>&1 || true
+        if command -v omv-mkworkbench >/dev/null 2>&1; then
+            omv-mkworkbench all >/dev/null 2>&1 || true
+        fi
+        systemctl restart openmediavault-engined.service >/dev/null 2>&1 || true
+        ;;
+    purge)
+        rm -f /etc/seagate-fan.json /etc/seagate-led.json /etc/seagate-buttons.json
+        ;;
+esac
+
+exit 0

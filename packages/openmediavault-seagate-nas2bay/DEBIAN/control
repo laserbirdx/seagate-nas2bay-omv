@@ -1,0 +1,17 @@
+Package: openmediavault-seagate-nas2bay
+Version: 1.0.0
+Architecture: all
+Maintainer: laserbirdx <https://github.com/laserbirdx>
+Depends: openmediavault (>= 7.0), python3, ethtool
+Recommends: seagate-nas2bay-boot
+Section: admin
+Priority: optional
+Homepage: https://github.com/laserbirdx/seagate-nas2bay-omv
+Description: OpenMediaVault 7 hardware plugins for the Seagate NAS 2-Bay (n090201 / SRPD20)
+ Native OMV 7 plugins for the Seagate NAS 2-Bay (Marvell Armada 370):
+  - Fan & Thermal: 4-step gpio-fan control (0/950/1400/1800 RPM), auto curve
+  - LED & Night Mode: all 6 chassis LEDs, presets, hourly sleep schedule
+  - Chassis Buttons: short/long press actions for Sync, Power and Reset
+  - One-Touch USB Backup with folder naming, LED feedback and post-actions
+  - Interactive "Hardware Overview" dashboard widget (front/rear chassis)
+ English and Turkish (tr_TR) translations included.

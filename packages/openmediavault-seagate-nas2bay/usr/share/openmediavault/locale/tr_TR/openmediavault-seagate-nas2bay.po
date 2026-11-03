@@ -1,0 +1,440 @@
+msgid ""
+msgstr ""
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Fan & Thermal"
+msgstr "Fan ve Sıcaklık"
+
+msgid "Fan & Thermal Control"
+msgstr "Fan ve Sıcaklık Kontrolü"
+
+msgid "Fan and thermal settings have been saved."
+msgstr "Fan ve sıcaklık ayarları kaydedildi."
+
+msgid "Live Fan & Thermal Telemetry"
+msgstr "Canlı Fan ve Sıcaklık Durumu"
+
+msgid "Fan Operating Mode"
+msgstr "Fan Çalışma Modu"
+
+msgid "Automatic (Smart Temperature Control)"
+msgstr "Otomatik (Akıllı Sıcaklık Kontrolü)"
+
+msgid "Manual (Fixed Fan Speed)"
+msgstr "Manuel (Sabit Fan Hızı)"
+
+msgid "Manual Fan Speed (Used in Manual Mode)"
+msgstr "Manuel Fan Hızı (Manuel Modda Kullanılır)"
+
+msgid "1800 RPM (100% - Maximum / Turbo Cooling)"
+msgstr "1800 RPM (%100 - Maksimum / Turbo Soğutma)"
+
+msgid "1400 RPM (75% - Medium / Balanced Speed)"
+msgstr "1400 RPM (%75 - Orta / Dengeli Hız)"
+
+msgid "950 RPM (50% - Quiet / Low Speed)"
+msgstr "950 RPM (%50 - Sessiz / Düşük Hız)"
+
+msgid "0 RPM (0% - Fan Off)"
+msgstr "0 RPM (%0 - Fan Kapalı)"
+
+msgid "Auto Quiet Fan (950 RPM) Threshold (°C)"
+msgstr "Otomatik Sessiz Fan (950 RPM) Başlangıç Eşiği (°C)"
+
+msgid "Auto Medium Fan (1400 RPM) Threshold (°C)"
+msgstr "Otomatik Orta Hız (1400 RPM) Eşiği (°C)"
+
+msgid "Auto Full Speed (1800 RPM) Threshold (°C)"
+msgstr "Otomatik Tam Hız (1800 RPM) Eşiği (°C)"
+
+msgid "LED & Night Mode"
+msgstr "LED ve Gece Modu"
+
+msgid "LED & Night Mode Control"
+msgstr "LED ve Saatlik Gece Modu Kontrolü"
+
+msgid "LED and schedule settings have been saved."
+msgstr "LED ve saatlik zamanlayıcı ayarları kaydedildi."
+
+msgid "Live Chassis LED & Schedule Status"
+msgstr "Canlı Kasa LED ve Zamanlayıcı Durumu"
+
+msgid "Master LED Profile"
+msgstr "Genel LED Profili"
+
+msgid "Custom (Configure Each LED Individually Below)"
+msgstr "Özel (Aşağıdan Her LED'i Ayrı Ayrı Yönet)"
+
+msgid "Factory Default (White Power On + Disk White Sync Activity)"
+msgstr "Fabrika Varsayılanı (Beyaz Güç Açık + Beyaz Disk Sync Aktivite)"
+
+msgid "Night Mode (Turn Off All 6 Chassis LEDs Immediately)"
+msgstr "Gece Modu (Tüm 6 Kasa LED'ini Hemen Kapat)"
+
+msgid "System Heartbeat + Disk White Sync Activity"
+msgstr "Sistem Kalp Atışı + Beyaz Disk Sync Aktivite"
+
+msgid "Front White Power LED (dart-white-power)"
+msgstr "Ön Beyaz Güç LED'i (dart-white-power)"
+
+msgid "Solid White On (Default)"
+msgstr "Sabit Beyaz Yanık (Varsayılan)"
+
+msgid "Off (Dark)"
+msgstr "Kapalı (Karanlık)"
+
+msgid "Blink on Disk Read/Write Activity"
+msgstr "Disk Okuma/Yazma Aktivitesinde Yanıp Sön"
+
+msgid "Blink on Ethernet (eth0) Network Traffic"
+msgstr "Ethernet (eth0) Ağ Trafiğinde Yanıp Sön"
+
+msgid "Heartbeat Pulse Effect"
+msgstr "Kalp Atışı (Heartbeat) Efekti"
+
+msgid "Slow Blink (Timer)"
+msgstr "Yavaş Yanıp Sönme (Zamanlayıcı)"
+
+msgid "Front Red Power / Alert LED (dart-red-power)"
+msgstr "Ön Kırmızı Güç / Uyarı LED'i (dart-red-power)"
+
+msgid "Off (Default)"
+msgstr "Kapalı (Varsayılan)"
+
+msgid "Solid Red On"
+msgstr "Sabit Kırmızı Yanık"
+
+msgid "Blink Red on Disk Activity"
+msgstr "Disk Aktivitesinde Kırmızı Yanıp Sön"
+
+msgid "Red Heartbeat Pulse Effect"
+msgstr "Kırmızı Kalp Atışı Efekti"
+
+msgid "Blink Red on CPU Load"
+msgstr "İşlemci (CPU) Yüküne Göre Yanıp Sön"
+
+msgid "Disk 1 & Disk 2 White Sync / Activity LEDs (sata0 & sata1)"
+msgstr "Disk 1 ve Disk 2 Beyaz Sync / Aktivite LED'leri (sata0 & sata1)"
+
+msgid "Controls the front white disk LEDs that blink in sync with SATA activity."
+msgstr "SATA disk aktivitesiyle senkronize yanıp sönen ön beyaz disk LED'lerini yönetir."
+
+msgid "Blink in Sync with Disk Read/Write (Default)"
+msgstr "Disk Okuma/Yazma ile Senkronize Yanıp Sön (Varsayılan)"
+
+msgid "Solid White On (No Blink)"
+msgstr "Sabit Beyaz Yanık (Yanıp Sönmez)"
+
+msgid "Off (Completely Dark - No Sync Blink)"
+msgstr "Tamamen Kapalı (Sync Yanıp Sönmeyi Kapat)"
+
+msgid "Blink on Disk Read Only"
+msgstr "Sadece Disk Okuma Yapılırken Yanıp Sön"
+
+msgid "Blink on Disk Write Only"
+msgstr "Sadece Disk Yazma Yapılırken Yanıp Sön"
+
+msgid "Disk 1 & Disk 2 Red Bay LEDs (sata0 & sata1)"
+msgstr "Disk 1 ve Disk 2 Kırmızı Yuva LED'leri (sata0 & sata1)"
+
+msgid "Blink Red on Disk Read/Write Activity"
+msgstr "Disk Okuma/Yazma Aktivitesinde Kırmızı Yanıp Sön"
+
+msgid "Enable Hourly Auto-Off Schedule (Night Mode Timer)"
+msgstr "Saatlik Otomatik Kapatma Zamanlayıcısını Etkinleştir (Gece Modu)"
+
+msgid "Automatically turns off all 6 chassis LEDs between the start and end hours below."
+msgstr "Aşağıdaki başlangıç ve bitiş saatleri arasında kasa üzerindeki 6 LED'in tamamını otomatik kapatır."
+
+msgid "Turn Off All LEDs At Hour (Start Time)"
+msgstr "LED'leri Kapatma Saati (Başlangıç)"
+
+msgid "Turn On / Restore LEDs At Hour (End Time)"
+msgstr "LED'leri Tekrar Açma Saati (Bitiş)"
+
+msgid "Use Physical Front Sync Button to Toggle All LEDs On/Off"
+msgstr "Ön Paneldeki Fiziksel Sync Butonuyla Tüm LED'leri Aç/Kapat"
+
+msgid "When enabled, pressing the physical Sync button on the front panel toggles Night Mode (All LEDs Off / On)."
+msgstr "Etkinleştirildiğinde kasanın önündeki Sync (Yedekleme) tuşuna basmak tüm LED'leri anında açar veya kapatır."
+
+msgid "Seagate NAS 2-Bay Visual Overview"
+msgstr "Seagate NAS 2-Bay Görsel Donanım Özeti"
+
+msgid "Interactive front and rear chassis view with hover hardware details"
+msgstr "Üzerine gelindiğinde donanım detaylarını gösteren interaktif ön ve arka kasa görünümü"
+
+msgid "Seagate LED & Night Mode (Cards)"
+msgstr "Seagate LED ve Gece Modu (Kartlar)"
+
+msgid "Displays live status of Power LEDs, Disk Sync LEDs and Hourly Night Mode Schedule."
+msgstr "Güç LED'leri, Disk Sync LED'leri ve Saatlik Gece Modu durumunu gösterir."
+
+msgid "Seagate Fan, Thermal & LED (Cards)"
+msgstr "Seagate Fan ve Sıcaklık (Kartlar)"
+
+msgid "Seagate Fan, Thermal & LED (Table)"
+msgstr "Seagate Fan ve Sıcaklık (Tablo)"
+
+msgid "Turn Off All LEDs"
+msgstr "Tüm LED'leri Kapat"
+
+msgid "Restore LED Defaults"
+msgstr "Varsayılan LED Ayarlarına Dön"
+
+msgid "Turning off all chassis LEDs ..."
+msgstr "Tüm kasa LED'leri kapatılıyor ..."
+
+msgid "All chassis LEDs have been turned off."
+msgstr "Tüm kasa LED'leri kapatıldı."
+
+msgid "Restoring default LED settings ..."
+msgstr "Varsayılan LED ayarlarına dönülüyor ..."
+
+msgid "Default LED settings have been restored."
+msgstr "Varsayılan LED ayarlarına dönüldü."
+
+msgid "Seagate NAS 2-Bay Visual Overview (Wide)"
+msgstr "Seagate NAS 2-Bay Görsel Donanım Özeti (Geniş)"
+
+msgid "Buttons & Wake-on-LAN"
+msgstr "Butonlar ve Wake-on-LAN"
+
+msgid "Updated button and Wake-on-LAN settings."
+msgstr "Buton ve Wake-on-LAN ayarları güncellendi."
+
+msgid "Wake-on-LAN & Last Button Event Status"
+msgstr "Wake-on-LAN ve Son Buton İşlem Durumu"
+
+msgid "Wake-on-LAN (Remote Power On via Magic Packet)"
+msgstr "Wake-on-LAN (Ağ Üzerinden Uzaktan Uyandırma)"
+
+msgid "Enable Wake-on-LAN (WoL) on Gigabit Ethernet (eth0)"
+msgstr "Gigabit Ethernet (eth0) Üzerinde Wake-on-LAN (WoL) Özelliğini Etkinleştir"
+
+msgid "Allows powering on the Seagate NAS remotely over the network using a Wake-on-LAN Magic Packet."
+msgstr "Seagate NAS cihazını yerel ağ üzerinden Magic Packet göndererek uzaktan açmanızı sağlar."
+
+msgid "General Button Behavior & One-Touch USB Backup"
+msgstr "Genel Buton Davranışı ve Tek Tuşla USB Yedekleme"
+
+msgid "Long Press Hold Duration"
+msgstr "Uzun Basış (Basılı Tutma) Süresi"
+
+msgid "How many seconds a button must be held down to trigger its Long Press action."
+msgstr "Uzun basış görevinin devreye girmesi için butona kaç saniye basılı tutulacağını belirler."
+
+msgid "2 Seconds (Recommended)"
+msgstr "2 Saniye (Önerilen)"
+
+msgid "3 Seconds"
+msgstr "3 Saniye"
+
+msgid "5 Seconds"
+msgstr "5 Saniye"
+
+msgid "Blink Power LED on Button Press"
+msgstr "Butona Basıldığında Güç LED'i İle Bildirim Ver"
+
+msgid "Briefly flashes the front white Power LED to confirm when a Short Press or Long Press action is triggered."
+msgstr "Normal veya uzun basış algılandığında onay için ön beyaz Güç LED'ini kısaca yakıp söndürür."
+
+msgid "One-Touch USB Backup Destination Share"
+msgstr "Tek Tuşla USB Yedekleme Hedef Paylaşımı"
+
+msgid "Target SMB shared folder where USB files are copied when 'One-Touch USB Backup' is triggered."
+msgstr "'Tek Tuşla USB Yedekleme' tetiklendiğinde USB bellekteki dosyaların kopyalanacağı SMB paylaşım klasörü."
+
+msgid "Front Sync Button (Lower Button with Circular Arrow Icon)"
+msgstr "Ön Sync Butonu (Alt Buton — Dairesel Ok Simgeli)"
+
+msgid "Sync Button — Normal Press (Short Press)"
+msgstr "Sync Butonu — Normal Basış (Kısa Basış)"
+
+msgid "Sync Button — Long Press (Hold)"
+msgstr "Sync Butonu — Uzun Basış (Basılı Tutma)"
+
+msgid "Front Power Button (Upper Button with Power Icon)"
+msgstr "Ön Güç Butonu (Üst Buton — Güç Simgeli)"
+
+msgid "Power Button — Normal Press (Short Press)"
+msgstr "Güç Butonu — Normal Basış (Kısa Basış)"
+
+msgid "Power Button — Long Press (Hold)"
+msgstr "Güç Butonu — Uzun Basış (Basılı Tutma)"
+
+msgid "Rear Reset Button (Rear Panel Pinhole Button)"
+msgstr "Arka Reset Butonu (Arka Panel İğne Deliği Butonu)"
+
+msgid "Reset Button — Normal Press (Short Press)"
+msgstr "Reset Butonu — Normal Basış (Kısa Basış)"
+
+msgid "Reset Button — Long Press (Hold)"
+msgstr "Reset Butonu — Uzun Basış (Basılı Tutma)"
+
+msgid "Toggle Stealth Mode (All LEDs ON / OFF)"
+msgstr "Gece Modunu Aç/Kapat (Tüm LED'leri Aç / Kapat)"
+
+msgid "One-Touch USB Backup (Copy USB Drive to NAS Share)"
+msgstr "Tek Tuşla USB Yedekleme (USB Belleği NAS Paylaşımına Kopyala)"
+
+msgid "Safely Unmount All Connected USB Drives"
+msgstr "Takılı Tüm USB Bellekleri Güvenle Çıkar (Unmount)"
+
+msgid "Toggle Fan Turbo Mode (1800 RPM Max / Auto)"
+msgstr "Fan Turbo Modunu Aç/Kapat (1800 RPM Tam Hız / Otomatik)"
+
+msgid "Restart SMB/CIFS File Sharing Service"
+msgstr "SMB/CIFS Dosya Paylaşım Servisini Yeniden Başlat"
+
+msgid "Renew Network IP & Restart eth0 Interface"
+msgstr "Ağ IP Adresini Yenile ve eth0 Arayüzünü Yeniden Başlat"
+
+msgid "Safe System Reboot (Restart NAS)"
+msgstr "Sistemi Güvenli Yeniden Başlat (Reboot)"
+
+msgid "Safe System Shutdown (Power Off NAS)"
+msgstr "Sistemi Güvenli Kapat (Power Off)"
+
+msgid "Do Nothing (Disabled)"
+msgstr "İşlem Yapma (Devre Dışı)"
+
+msgid "Chassis Buttons"
+msgstr "Kasa Butonları"
+
+msgid "Updated chassis button settings."
+msgstr "Kasa butonu ayarları güncellendi."
+
+msgid "Last Triggered Button Event"
+msgstr "Son Tetiklenen Buton İşlemi"
+
+msgid "Last Button Event & Backup Path Preview"
+msgstr "Son Buton İşlemi ve Yedekleme Klasör Önizlemesi"
+
+msgid "General Button Hold & LED Feedback"
+msgstr "Genel Basılı Tutma Süresi ve LED Bildirimi"
+
+msgid "One-Touch USB Backup Settings (Directory, Prefix/Suffix, LEDs & Post-Action)"
+msgstr "Tek Tuşla USB Yedekleme Ayarları (Dizin, Prefix/Suffix, LED Bildirimi ve Bitiş Davranışı)"
+
+msgid "Destination SMB Share"
+msgstr "Hedef SMB Paylaşımı"
+
+msgid "Select which shared folder on the NAS will store the USB backup files."
+msgstr "USB yedekleme dosyalarının NAS üzerindeki hangi paylaşıma kaydedileceğini seçin."
+
+msgid "Destination Subfolder Path"
+msgstr "Hedef Alt Klasör Yolu (Dizin)"
+
+msgid "Subfolder inside the selected share (e.g. 'USB_Backup' or 'Backups/Flash'). Leave empty to copy directly into the share root."
+msgstr "Seçilen paylaşım içindeki alt dizin (örn. 'USB_Backup' veya 'Yedekler/Flash'). Doğrudan ana dizine kopyalamak için boş bırakın."
+
+msgid "Backup Folder Creation Mode"
+msgstr "Yedekleme Klasörü Oluşturma Modu"
+
+msgid "Create New Folder Every Time (Prefix + Timestamp + Suffix)"
+msgstr "Her Yedeklemede Yeni Klasör Aç (Prefix + Tarih/Saat + Suffix)"
+
+msgid "Copy Into Single Fixed Folder (Overwrite Existing Files)"
+msgstr "Sabit Tek Klasörün İçine Kopyala (Mevcut Dosyaların Üzerine Yaz)"
+
+msgid "Folder Name Prefix"
+msgstr "Klasör Adı Ön Eki (Prefix)"
+
+msgid "Text added at the beginning of the backup folder name (e.g. 'USB_' or 'Flash_')."
+msgstr "Oluşturulacak yedek klasörü adının başına eklenecek metin (örn. 'USB_' veya 'Flash_')."
+
+msgid "Folder Timestamp Format"
+msgstr "Klasör Adı Tarih/Saat Formatı"
+
+msgid "Date & Time Compact (20261103_104500)"
+msgstr "Tarih ve Saat Bitişik (20261103_104500)"
+
+msgid "Date & Time Dashed (2026-11-03_10-45)"
+msgstr "Tarih ve Saat Tireli (2026-11-03_10-45)"
+
+msgid "Date Only (2026-11-03)"
+msgstr "Sadece Tarih (2026-11-03)"
+
+msgid "No Timestamp (Prefix + Suffix Only)"
+msgstr "Tarih Ekleme (Sadece Prefix + Suffix)"
+
+msgid "Folder Name Suffix"
+msgstr "Klasör Adı Son Eki (Suffix)"
+
+msgid "Text added at the end of the backup folder name (e.g. '_Backup' or '_Yedek')."
+msgstr "Oluşturulacak yedek klasörü adının sonuna eklenecek metin (örn. '_Backup' veya '_Yedek')."
+
+msgid "LED Notification While Copying"
+msgstr "Kopyalama Başladığında / Devam Ederken LED Bildirimi"
+
+msgid "How the chassis LEDs behave while USB files are actively being copied to the NAS."
+msgstr "USB bellekteki dosyalar NAS'a kopyalanırken kasa LED'lerinin nasıl davranacağını belirler."
+
+msgid "Blink Front White Power LED"
+msgstr "Ön Beyaz Güç LED'ini Yanıp Söndür"
+
+msgid "Blink White Power LED + Disk 1/2 White LEDs"
+msgstr "Beyaz Güç LED'i + Disk 1/2 Beyaz LED'lerini Birlikte Yanıp Söndür"
+
+msgid "Blink White & Red Power LEDs (High Visibility)"
+msgstr "Beyaz ve Kırmızı Güç LED'ini Sırayla Yanıp Söndür (Yüksek Görünürlük)"
+
+msgid "Do Not Change LEDs During Copy"
+msgstr "Kopyalama Sırasında LED'leri Değiştirme"
+
+msgid "LED Notification When Copy Finishes"
+msgstr "Kopyalama Bittiğinde LED Bildirimi"
+
+msgid "How the chassis LEDs signal that the USB backup has completed (on error, Red Power LED flashes 5 times)."
+msgstr "USB yedekleme tamamlandığında LED'lerin nasıl haber vereceğini belirler (hata durumunda Kırmızı LED 5 kez yanıp söner)."
+
+msgid "Flash All White LEDs 3 Times then Restore Normal LEDs"
+msgstr "Tüm Beyaz LED'leri 3 Kez Çakar ve Önceki LED Ayarına Döner"
+
+msgid "Keep White Power LED Solid ON for 10s then Restore"
+msgstr "Beyaz Güç LED'ini 10 Saniye Sabit Yakar ve Önceki Ayara Döner"
+
+msgid "Turn Off All Chassis LEDs After Backup (Stealth Mode)"
+msgstr "Yedekleme Bitince Tüm Kasa LED'lerini Kapatır (Gece Modu)"
+
+msgid "Immediately Restore Previous LED Settings"
+msgstr "Doğrudan Önceki LED Ayarlarına Döner"
+
+msgid "Post-Backup Device & System Behavior"
+msgstr "Yedekleme Bitince Cihaz ve USB Davranışı"
+
+msgid "Action to perform automatically once the USB backup finishes and disk caches are synced."
+msgstr "Kopyalama tamamlanıp önbellek diske yazıldıktan sonra otomatik yapılacak işlem."
+
+msgid "Safely Unmount & Eject USB Drive (Recommended)"
+msgstr "USB Belleği Güvenle Çıkar / Unmount Et (Önerilen)"
+
+msgid "Keep USB Drive Mounted"
+msgstr "USB Belleği Takılı / Bağlı Bırak"
+
+msgid "Safely Eject USB Drive & Turn Off All Chassis LEDs"
+msgstr "USB Belleği Güvenle Çıkar ve Tüm Kasa LED'lerini Kapat"
+
+msgid "Safely Eject USB Drive & Shut Down NAS (Power Off)"
+msgstr "USB Belleği Güvenle Çıkar ve NAS Cihazını Kapat (Power Off)"
+
+msgid "Safely Eject USB Drive & Reboot NAS"
+msgstr "USB Belleği Güvenle Çıkar ve NAS Cihazını Yeniden Başlat"
+
+msgid "Run USB Backup Now"
+msgstr "Şimdi USB Yedeklemeyi Başlat"
+
+msgid "Starting One-Touch USB Backup ..."
+msgstr "Tek Tuşla USB Yedekleme başlatılıyor ..."
+
+msgid "One-Touch USB Backup started in the background."
+msgstr "Tek Tuşla USB Yedekleme arka planda başlatıldı."
+
+msgid "Destination Shared Folder"
+msgstr "Hedef Paylaşım Klasörü"
+
+msgid "OpenMediaVault shared folder that will receive the USB backup files."
+msgstr "USB yedekleme dosyalarının kopyalanacağı OpenMediaVault paylaşım klasörü."

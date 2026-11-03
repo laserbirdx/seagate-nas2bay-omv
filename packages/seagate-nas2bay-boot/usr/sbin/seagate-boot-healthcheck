@@ -1,0 +1,55 @@
+#!/bin/sh
+# seagate-boot-healthcheck - second stage of the fail-safe boot.
+#
+# Stage 1 (initramfs /init) points U-Boot back to the factory OS before the
+# Debian root is even mounted. This service waits until the network and sshd
+# are up and only then re-selects Debian for the next boot. If the system is
+# not reachable it rolls back to the factory OS and reboots, so a broken
+# network configuration can never lock you out of the NAS.
+set -u
+
+[ -f /etc/default/seagate-nas2bay-boot ] && . /etc/default/seagate-nas2bay-boot
+ROLLBACK="${HEALTHCHECK_ROLLBACK:-yes}"
+TIMEOUT="${HEALTHCHECK_TIMEOUT:-90}"
+LOG=/var/log/seagate-boot-healthcheck.log
+IFACE=eth0
+
+log() { echo "[$(date '+%F %T')] $*" | tee -a "$LOG"; }
+
+# Solid white power LED = "OS is up"
+if [ -d /sys/class/leds/dart:white:power ]; then
+    echo none > /sys/class/leds/dart:white:power/trigger 2>/dev/null || true
+    echo 1 > /sys/class/leds/dart:white:power/brightness 2>/dev/null || true
+fi
+
+log "Debian booted: $(uname -r)"
+ok=0
+i=0
+while [ "$i" -lt "$TIMEOUT" ]; do
+    if ip -4 addr show dev "$IFACE" 2>/dev/null | grep -q "inet " && systemctl is-active --quiet ssh; then
+        ok=1
+        break
+    fi
+    systemctl is-active --quiet ssh || systemctl start ssh 2>/dev/null || true
+    sleep 2
+    i=$((i + 2))
+done
+
+if [ "$ok" = 1 ]; then
+    log "HEALTHCHECK PASSED: $(ip -4 -o addr show dev "$IFACE" | awk '{print $4}'), sshd active"
+    GW=$(ip route show default 2>/dev/null | awk '/default/ {print $3; exit}')
+    [ -n "$GW" ] && { ping -c1 -W2 "$GW" >/dev/null 2>&1 && log "gateway $GW reachable" || log "gateway $GW not answering ping (ignored)"; }
+    /usr/sbin/nas-boot-select debian >>"$LOG" 2>&1 || log "WARNING: could not write slot0 to nv_data"
+    exit 0
+fi
+
+log "HEALTHCHECK FAILED: no IPv4 on $IFACE or sshd inactive after ${TIMEOUT}s"
+ip addr show >>"$LOG" 2>&1 || true
+if [ "$ROLLBACK" = yes ]; then
+    log "Rolling back to the factory OS and rebooting"
+    /usr/sbin/nas-boot-select factory >>"$LOG" 2>&1 || true
+    sync
+    sleep 2
+    systemctl reboot --force
+fi
+exit 1

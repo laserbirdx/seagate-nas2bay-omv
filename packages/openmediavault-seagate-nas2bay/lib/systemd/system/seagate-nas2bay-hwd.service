@@ -1,0 +1,14 @@
+[Unit]
+Description=Seagate NAS 2-Bay hardware daemon (fan curve, LEDs, chassis buttons, USB backup)
+After=local-fs.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/seagate-nas2bay-hwd
+Restart=always
+RestartSec=3
+Nice=5
+
+[Install]
+WantedBy=multi-user.target

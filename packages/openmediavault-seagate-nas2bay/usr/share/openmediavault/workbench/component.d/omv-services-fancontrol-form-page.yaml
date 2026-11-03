@@ -1,0 +1,72 @@
+version: "1.0"
+type: component
+data:
+  name: omv-services-fancontrol-form-page
+  type: formPage
+  config:
+    request:
+      service: FanControl
+      get:
+        method: getSettings
+      post:
+        method: setSettings
+    fields:
+      - type: textInput
+        name: live_status
+        label: _("Live Fan & Thermal Telemetry")
+        readonly: true
+        submitValue: false
+      - type: select
+        name: mode
+        label: _("Fan Operating Mode")
+        value: "auto"
+        store:
+          data:
+            - - "auto"
+              - _("Automatic (Smart Temperature Control)")
+            - - "manual"
+              - _("Manual (Fixed Fan Speed)")
+      - type: select
+        name: manual_rpm
+        label: _("Manual Fan Speed (Used in Manual Mode)")
+        value: 1400
+        store:
+          data:
+            - - 1800
+              - _("1800 RPM (100% - Maximum / Turbo Cooling)")
+            - - 1400
+              - _("1400 RPM (75% - Medium / Balanced Speed)")
+            - - 950
+              - _("950 RPM (50% - Quiet / Low Speed)")
+            - - 0
+              - _("0 RPM (0% - Fan Off)")
+      - type: numberInput
+        name: temp_low
+        label: _("Auto Quiet Fan (950 RPM) Threshold (°C)")
+        value: 42
+        validators:
+          min: 25
+          max: 75
+          required: true
+      - type: numberInput
+        name: temp_med
+        label: _("Auto Medium Fan (1400 RPM) Threshold (°C)")
+        value: 50
+        validators:
+          min: 30
+          max: 80
+          required: true
+      - type: numberInput
+        name: temp_high
+        label: _("Auto Full Speed (1800 RPM) Threshold (°C)")
+        value: 58
+        validators:
+          min: 35
+          max: 85
+          required: true
+    buttons:
+      - template: submit
+      - template: cancel
+        execute:
+          type: url
+          url: /dashboard

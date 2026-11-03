@@ -1,0 +1,220 @@
+
+/* OpenMediaVault 7 Native Dashboard Widget Styling for Hardware Overview */
+.omv-hw-widget-wrapper {
+  -moz-column-break-inside: avoid;
+  break-inside: avoid;
+  margin-bottom: 0.75rem;
+}
+
+.omv-hw-card {
+  background-color: var(--mat-background-color-card, #424242);
+  color: var(--mat-color-text, #ffffff);
+  font-family: var(--mat-font-family-body, Inter, Roboto, "Helvetica Neue", sans-serif);
+  font-size: var(--mat-font-size-body-1, 14px);
+  font-weight: var(--mat-font-weight-body-1, 400);
+  border-radius: 4px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+}
+
+.omv-hw-card-header {
+  padding: 1rem 1rem 0.5rem;
+}
+
+.omv-hw-card-title {
+  font-size: var(--mat-font-size-title, 20px);
+  font-weight: var(--mat-font-weight-title, 500);
+  color: var(--mat-color-text, #ffffff);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.omv-hw-card-content {
+  padding: 0 1rem 1rem;
+}
+
+.omv-hw-chassis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.omv-hw-chassis-box {
+  background-color: var(--mat-background-color-background, #303030);
+  border-radius: 4px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.omv-hw-chassis-label {
+  font-size: var(--mat-font-size-caption, 12px);
+  color: var(--mat-color-secondary-text, rgba(255, 255, 255, 0.7));
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+}
+
+.omv-hw-img-wrap {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 175px;
+  user-select: none;
+}
+
+.omv-hw-img-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+
+.omv-hw-hotspot {
+  position: absolute;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.1s ease, border-color 0.1s ease;
+}
+
+.omv-hw-img-wrap:hover .omv-hw-hotspot {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.omv-hw-hotspot:hover {
+  border-color: var(--mat-primary-color-text, #5dacdf) !important;
+  background-color: rgba(93, 172, 223, 0.16);
+}
+
+/* OMV Disk Temperatures-style flat summary tiles */
+.omv-hw-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+.omv-hw-tile {
+  background-color: var(--mat-background-color-background, #303030);
+  border-radius: 4px;
+  padding: 0.45rem 0.6rem;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.omv-hw-tile:hover {
+  background-color: var(--mat-background-color-hover, rgba(255, 255, 255, 0.04));
+}
+
+.omv-hw-tile-label {
+  font-size: var(--mat-font-size-caption, 12px);
+  color: var(--mat-color-secondary-text, rgba(255, 255, 255, 0.7));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.omv-hw-tile-value {
+  font-size: var(--mat-font-size-body-1, 14px);
+  font-weight: 700;
+  color: var(--mat-color-text, #ffffff);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+/* Native OMV Material Tooltip / Popover */
+.omv-hw-tooltip {
+  position: fixed;
+  z-index: 10000;
+  min-width: 240px;
+  max-width: 310px;
+  background-color: var(--mat-background-color-card, #424242);
+  color: var(--mat-color-text, #ffffff);
+  font-family: var(--mat-font-family-body, Inter, Roboto, "Helvetica Neue", sans-serif);
+  font-size: var(--mat-font-size-caption, 12px);
+  border-radius: 4px;
+  padding: 0.75rem 0.85rem;
+  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s linear;
+}
+
+.omv-hw-tooltip.visible {
+  opacity: 1;
+}
+
+.omv-hw-tt-title {
+  font-size: var(--mat-font-size-body-1, 14px);
+  font-weight: 700;
+  color: var(--mat-color-text, #ffffff);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.omv-hw-tt-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.omv-hw-tt-status.ok {
+  background-color: #4cd964;
+  color: #1a231a;
+}
+
+.omv-hw-tt-status.info {
+  background-color: #3b95cf;
+  color: #ffffff;
+}
+
+.omv-hw-tt-status.muted {
+  background-color: #656c72;
+  color: #ffffff;
+}
+
+.omv-hw-tt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 2px 0;
+  line-height: 1.35;
+}
+
+.omv-hw-tt-key {
+  color: var(--mat-color-secondary-text, rgba(255, 255, 255, 0.7));
+  font-weight: 400;
+}
+
+.omv-hw-tt-val {
+  color: var(--mat-color-text, #ffffff);
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Red & Blue LED Quick Action Buttons */
+button.sg-btn-led-off,
+.mat-mdc-unelevated-button.sg-btn-led-off,
+.omv-background-color-pair-red {
+  background-color: #d32f2f !important;
+  color: #ffffff !important;
+}
+button.sg-btn-led-default,
+.mat-mdc-unelevated-button.sg-btn-led-default,
+.omv-background-color-pair-blue {
+  background-color: #1976d2 !important;
+  color: #ffffff !important;
+}

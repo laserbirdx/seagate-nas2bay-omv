@@ -1,0 +1,4 @@
+/etc/default/seagate-nas2bay-boot
+/etc/initramfs-tools/hooks/seagate-nas2bay
+/etc/kernel/postinst.d/zz-seagate-nas2bay-uimage
+/etc/systemd/system.conf.d/zz-seagate-nas2bay-watchdog.conf

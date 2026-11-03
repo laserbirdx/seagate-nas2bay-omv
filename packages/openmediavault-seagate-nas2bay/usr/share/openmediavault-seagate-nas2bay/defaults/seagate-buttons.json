@@ -1,0 +1,21 @@
+{
+    "long_press_sec": 2,
+    "led_feedback": true,
+    "usb_backup_sharedfolderref": "",
+    "usb_backup_path": "",
+    "usb_backup_subdir": "USB_Backup",
+    "usb_backup_mode": "timestamp_folder",
+    "usb_backup_prefix": "USB_",
+    "usb_backup_timestamp_fmt": "YYYYMMDD_HHMMSS",
+    "usb_backup_suffix": "_Backup",
+    "usb_led_during": "blink_white_power",
+    "usb_led_complete": "flash_3x_restore",
+    "usb_post_action": "eject_usb",
+    "sync_short_action": "toggle_leds",
+    "sync_long_action": "usb_backup",
+    "power_short_action": "fan_boost_toggle",
+    "power_long_action": "poweroff",
+    "reset_short_action": "restart_smb",
+    "reset_long_action": "reset_network_dhcp",
+    "last_event": "None (Ready)"
+}

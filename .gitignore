@@ -1,0 +1,6 @@
+# build output / release assets (upload to GitHub Releases, never commit)
+dist/
+*.img
+*.img.gz
+*.tar.gz
+SHA256SUMS*

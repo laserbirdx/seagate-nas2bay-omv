@@ -1,0 +1,14 @@
+[Unit]
+Description=Seagate NAS 2-Bay boot health check (confirms Debian, rolls back to factory OS on failure)
+After=network-online.target ssh.service seagate-nas2bay-firstboot.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/seagate-boot-healthcheck
+ExecStartPost=-/sbin/losetup --direct-io=on /dev/loop0
+RemainAfterExit=yes
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target

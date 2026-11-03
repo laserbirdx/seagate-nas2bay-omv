@@ -1,0 +1,170 @@
+version: "1.0"
+type: component
+data:
+  name: omv-services-ledcontrol-form-page
+  type: formPage
+  config:
+    request:
+      service: LedControl
+      get:
+        method: getSettings
+      post:
+        method: setSettings
+    fields:
+      - type: textInput
+        name: status_info
+        label: _("Live Chassis LED & Schedule Status")
+        readonly: true
+        disabled: true
+      - type: select
+        name: preset_mode
+        label: _("LED Operating Preset")
+        hint: _("Choose 'Turn Off All LEDs' for complete darkness, 'Normal' for standard operation, or 'Custom' to configure individual LEDs below.")
+        value: "normal"
+        store:
+          data:
+            - ["normal", _("Normal (Power ON + Disk Activity Blink)")]
+            - ["all_off", _("Turn Off All LEDs (Stealth / 100% Dark Mode)")]
+            - ["night", _("Night Mode (All Front & Disk LEDs OFF)")]
+            - ["custom", _("Custom (Configure Each LED Manually Below)")]
+      - type: divider
+        title: _("Hourly Sleep Schedule (Night Auto-Off Timer)")
+      - type: checkbox
+        name: schedule_enabled
+        label: _("Enable Hourly LED Sleep Schedule")
+        hint: _("Automatically turns off all 6 chassis LEDs (Power + Disk 1/2 White & Red) between the start and end hours below.")
+        value: false
+      - type: select
+        name: off_start_hour
+        label: _("Turn Off LEDs At (Start Hour)")
+        value: 23
+        store:
+          data:
+            - [0, "00:00"]
+            - [1, "01:00"]
+            - [2, "02:00"]
+            - [3, "03:00"]
+            - [4, "04:00"]
+            - [5, "05:00"]
+            - [6, "06:00"]
+            - [7, "07:00"]
+            - [8, "08:00"]
+            - [9, "09:00"]
+            - [10, "10:00"]
+            - [11, "11:00"]
+            - [12, "12:00"]
+            - [13, "13:00"]
+            - [14, "14:00"]
+            - [15, "15:00"]
+            - [16, "16:00"]
+            - [17, "17:00"]
+            - [18, "18:00"]
+            - [19, "19:00"]
+            - [20, "20:00"]
+            - [21, "21:00"]
+            - [22, "22:00"]
+            - [23, "23:00"]
+      - type: select
+        name: off_end_hour
+        label: _("Restore LEDs At (Wake Up Hour)")
+        value: 7
+        store:
+          data:
+            - [0, "00:00"]
+            - [1, "01:00"]
+            - [2, "02:00"]
+            - [3, "03:00"]
+            - [4, "04:00"]
+            - [5, "05:00"]
+            - [6, "06:00"]
+            - [7, "07:00"]
+            - [8, "08:00"]
+            - [9, "09:00"]
+            - [10, "10:00"]
+            - [11, "11:00"]
+            - [12, "12:00"]
+            - [13, "13:00"]
+            - [14, "14:00"]
+            - [15, "15:00"]
+            - [16, "16:00"]
+            - [17, "17:00"]
+            - [18, "18:00"]
+            - [19, "19:00"]
+            - [20, "20:00"]
+            - [21, "21:00"]
+            - [22, "22:00"]
+            - [23, "23:00"]
+      - type: checkbox
+        name: sync_button_toggle
+        label: _("Front Sync Button Toggles Stealth Mode")
+        hint: _("Pressing the physical Sync button on the front panel of the NAS immediately toggles all LEDs ON/OFF.")
+        value: true
+      - type: divider
+        title: _("Individual Chassis LED Triggers (Used in Custom Preset)")
+      - type: select
+        name: led_white_power
+        label: _("Front Power Button LED (White)")
+        value: "on"
+        store:
+          data:
+            - ["on", _("Solid ON")]
+            - ["off", _("OFF (Dark)")]
+            - ["heartbeat", _("System Load Heartbeat")]
+            - ["disk-activity", _("Blink on Disk Activity")]
+            - ["timer", _("Slow Blink (1 Hz)")]
+      - type: select
+        name: led_white_sata
+        label: _("Disk Bay 1 & Bay 2 Activity LEDs (White)")
+        hint: _("Controls the white status/sync LEDs for both SATA bays (mpp48 & mpp57).")
+        value: "disk-activity"
+        store:
+          data:
+            - ["disk-activity", _("Blink on Disk I/O Activity")]
+            - ["on", _("Solid ON")]
+            - ["off", _("OFF (Dark)")]
+            - ["heartbeat", _("System Load Heartbeat")]
+      - type: select
+        name: led_red_power
+        label: _("Front Power Alert LED (Red)")
+        value: "off"
+        store:
+          data:
+            - ["off", _("OFF")]
+            - ["on", _("Solid ON")]
+            - ["heartbeat", _("Heartbeat Pulse")]
+            - ["disk-activity", _("Blink on Disk Activity")]
+            - ["timer", _("Fast Alert Blink")]
+      - type: select
+        name: led_red_sata
+        label: _("Disk Bay 1 & Bay 2 Fault LEDs (Red)")
+        value: "off"
+        store:
+          data:
+            - ["off", _("OFF")]
+            - ["disk-activity", _("Blink on Disk I/O Activity")]
+            - ["on", _("Solid ON")]
+            - ["heartbeat", _("Heartbeat Pulse")]
+    buttons:
+      - template: submit
+      - text: _("Turn Off All LEDs")
+        class: omv-background-color-pair-red sg-btn-led-off
+        execute:
+          type: request
+          request:
+            service: LedControl
+            method: turnOffAll
+            progressMessage: _("Turning off all chassis LEDs ...")
+            successNotification: _("All chassis LEDs have been turned off.")
+      - text: _("Restore LED Defaults")
+        class: omv-background-color-pair-blue sg-btn-led-default
+        execute:
+          type: request
+          request:
+            service: LedControl
+            method: restoreDefaults
+            progressMessage: _("Restoring default LED settings ...")
+            successNotification: _("Default LED settings have been restored.")
+      - template: cancel
+        execute:
+          type: url
+          url: /dashboard

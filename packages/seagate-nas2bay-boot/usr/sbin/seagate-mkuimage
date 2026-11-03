@@ -1,0 +1,89 @@
+#!/bin/sh
+# seagate-mkuimage - build the U-Boot image for the Seagate NAS 2-Bay and
+# install it into the root_1 boot slot (/dev/md4:/boot).
+#
+# The stock U-Boot runs "bootm 0x2000000 - 0x6000000": it loads /boot/uImage
+# and /boot/armada-370-n090201.dtb but never a separate initrd. We therefore
+# pad the zImage to 16 MiB (0x2000040 + 16777152 = 0x3000000) and append the
+# initramfs, then tell the kernel where it is via /chosen linux,initrd-*.
+#
+# Usage: seagate-mkuimage [--no-install] [--root DIR] [KERNEL_VERSION]
+set -e
+
+TPL=/usr/share/seagate-nas2bay-boot
+DTB_NAME=armada-370-n090201.dtb
+PAD=16777152
+INITRD_START=0x3000000
+INITRD_MAX=$((0x6000000 - 0x3000000 - 0x100000))   # keep 1 MiB below the DTB
+INSTALL=1
+ROOT=""
+[ -f /etc/default/seagate-nas2bay-boot ] && . /etc/default/seagate-nas2bay-boot
+KERNEL_PATTERN="${KERNEL_PATTERN:-6.1.*-armmp}"
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --no-install) INSTALL=0 ;;
+        --root) ROOT="$2"; shift ;;
+        *) KVER="$1" ;;
+    esac
+    shift
+done
+BOOT="$ROOT/boot"
+
+if [ -z "$KVER" ]; then
+    # newest kernel matching KERNEL_PATTERN
+    KVER=$(ls "$BOOT"/vmlinuz-* 2>/dev/null | sed 's#.*/vmlinuz-##' | while read -r v; do
+        case "$v" in $KERNEL_PATTERN) echo "$v" ;; esac; done | sort -V | tail -n1)
+fi
+[ -n "$KVER" ] || { echo "seagate-mkuimage: no kernel matching '$KERNEL_PATTERN' in $BOOT" >&2; exit 1; }
+
+K="$BOOT/vmlinuz-$KVER"; I="$BOOT/initrd.img-$KVER"
+[ -f "$K" ] && [ -f "$I" ] || { echo "seagate-mkuimage: missing $K or $I" >&2; exit 1; }
+
+KSIZE=$(stat -c %s "$K"); ISIZE=$(stat -c %s "$I")
+[ "$KSIZE" -le "$PAD" ] || { echo "kernel larger than 16 MiB ($KSIZE)" >&2; exit 1; }
+[ "$ISIZE" -le "$INITRD_MAX" ] || { echo "initrd too large ($ISIZE > $INITRD_MAX)" >&2; exit 1; }
+
+TMP=$(mktemp -d "${TMPDIR:-/var/tmp}/mkuimage.XXXXXX")
+trap 'rm -rf "$TMP"' EXIT
+
+cp "$K" "$TMP/payload"
+truncate -s "$PAD" "$TMP/payload"
+cat "$I" >> "$TMP/payload"
+mkimage -A arm -O linux -T kernel -C none -a 0x02000040 -e 0x02000040 \
+    -n "Debian-$KVER-n090201" -d "$TMP/payload" "$TMP/uImage" >/dev/null
+
+cp "$TPL/$DTB_NAME" "$TMP/$DTB_NAME"
+INITRD_END=$(printf '0x%x' $((INITRD_START + ISIZE)))
+fdtput -t x "$TMP/$DTB_NAME" /chosen linux,initrd-start "$INITRD_START"
+fdtput -t x "$TMP/$DTB_NAME" /chosen linux,initrd-end "$INITRD_END"
+
+cp "$TMP/uImage" "$BOOT/uImage"
+cp "$TMP/$DTB_NAME" "$BOOT/$DTB_NAME"
+echo "seagate-mkuimage: built $BOOT/uImage for $KVER (initrd-end $INITRD_END)"
+
+[ "$INSTALL" = 1 ] || exit 0
+
+# Locate the root_1 RAID (normally /dev/md4) via its member partitions
+find_boot_md() {
+    for p in $(blkid -t PARTLABEL=root_1 -o device 2>/dev/null); do
+        h=$(ls "/sys/class/block/$(basename "$p")/holders" 2>/dev/null | head -n1)
+        [ -n "$h" ] && { echo "/dev/$h"; return; }
+    done
+    [ -b /dev/md4 ] && echo /dev/md4
+}
+MD=$(find_boot_md)
+[ -n "$MD" ] || { echo "seagate-mkuimage: root_1 boot array not found, NOT installed" >&2; exit 1; }
+
+MNT=/run/seagate-mkuimage
+mkdir -p "$MNT"
+mdadm --readwrite "$MD" 2>/dev/null || true
+mount -t ext2 "$MD" "$MNT"
+mkdir -p "$MNT/boot"
+for f in uImage "$DTB_NAME"; do
+    [ -f "$MNT/boot/$f" ] && cp "$MNT/boot/$f" "$MNT/boot/$f.prev"
+    cp "$BOOT/$f" "$MNT/boot/$f"
+done
+sync
+umount "$MNT"
+echo "seagate-mkuimage: installed into $MD:/boot (previous image kept as *.prev)"

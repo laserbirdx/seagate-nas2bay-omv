@@ -1,0 +1,8 @@
+version: "1.0"
+type: route
+data:
+  url: "/services/ledcontrol"
+  title: _("LED & Night Mode Control")
+  editing: true
+  notificationTitle: _("LED and schedule settings have been saved.")
+  component: omv-services-ledcontrol-form-page

@@ -1,0 +1,8 @@
+version: "1.0"
+type: route
+data:
+  url: "/services/fancontrol"
+  title: _("Fan & Thermal Control")
+  editing: true
+  notificationTitle: _("Fan and thermal settings have been saved.")
+  component: omv-services-fancontrol-form-page

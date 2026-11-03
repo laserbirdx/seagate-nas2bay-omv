@@ -1,0 +1,53 @@
+#!/bin/sh
+# nas-boot-select - choose which OS the Seagate NAS 2-Bay U-Boot starts next.
+#
+# The stock U-Boot reads /ubootenv from the "nv_data" partition (sdX3) of the
+# disks: saved_entry=0 -> root_1 (/dev/md4, Debian/OMV boot files)
+#        saved_entry=1 -> root_2 (/dev/md5, factory Seagate NAS OS)
+# boot_count is incremented by U-Boot; >=3 starts the NAND rescue system.
+#
+# Usage: nas-boot-select debian|factory|status
+set -e
+
+TPL=/usr/share/seagate-nas2bay-boot
+MODE="${1:-status}"
+MNT="/run/nas-boot-select.$$"
+
+nv_devices() {
+    devs=$(blkid -t PARTLABEL=nv_data -o device 2>/dev/null || true)
+    [ -n "$devs" ] || devs=$(ls /dev/sd[a-z]3 2>/dev/null || true)
+    echo "$devs"
+}
+
+with_nv() {   # with_nv <ro|rw> <callback>
+    mkdir -p "$MNT"
+    found=0
+    for dev in $(nv_devices); do
+        [ -b "$dev" ] || continue
+        while umount "$dev" 2>/dev/null; do :; done
+        if mount -t ext2 -o "$1" "$dev" "$MNT" 2>/dev/null; then
+            found=1
+            "$2" "$dev" || true
+            sync
+            umount "$MNT"
+        fi
+    done
+    rmdir "$MNT" 2>/dev/null || true
+    [ "$found" = 1 ] || { echo "ERROR: no nv_data partition found" >&2; exit 1; }
+}
+
+write_slot() { cat "$TPL/ubootenv.slot$SLOT" > "$MNT/ubootenv"; }
+show_env()  { echo "=== $1 ==="; dd if="$MNT/ubootenv" bs=1 skip=4 2>/dev/null | tr '\0' '\n' | grep -aE '^[a-zA-Z0-9_]+=' || true; }
+
+case "$MODE" in
+    debian|0|slot0)
+        SLOT=0; with_nv rw write_slot
+        echo "Next boot: slot 0 (Debian 12 / OpenMediaVault)" ;;
+    factory|seagate|1|slot1)
+        SLOT=1; with_nv rw write_slot
+        echo "Next boot: slot 1 (factory Seagate NAS OS)" ;;
+    status)
+        with_nv ro show_env ;;
+    *)
+        echo "Usage: $0 debian|factory|status" >&2; exit 2 ;;
+esac

@@ -1,0 +1,16 @@
+Package: seagate-nas2bay-boot
+Version: 1.0.0
+Architecture: armhf
+Maintainer: laserbirdx <https://github.com/laserbirdx>
+Depends: initramfs-tools, mdadm, lvm2, u-boot-tools, device-tree-compiler, e2fsprogs, util-linux
+Section: admin
+Priority: optional
+Homepage: https://github.com/laserbirdx/seagate-nas2bay-omv
+Description: Boot support for Debian 12 on the Seagate NAS 2-Bay (n090201 / SRPD20)
+ Lets the stock Seagate U-Boot start Debian 12 from a loop-mounted root image
+ on the existing RAID1+LVM data volume, without touching NAND:
+  - fixed Armada 370 device tree (SATA clocks, USB 3.0 PCIe, all 6 LEDs)
+  - uImage builder (zImage + initramfs in one image) and kernel hook
+  - custom initramfs /init with two-stage fail-safe rollback to the factory OS
+  - nas-boot-select tool to switch between Debian and the factory OS
+  - first-boot setup and boot health check

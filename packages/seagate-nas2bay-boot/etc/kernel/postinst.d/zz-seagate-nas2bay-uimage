@@ -1,0 +1,13 @@
+#!/bin/sh
+# Rebuild the Seagate NAS 2-Bay uImage after a kernel (or its initramfs) is
+# installed. Runs after /etc/kernel/postinst.d/initramfs-tools.
+set -e
+KVER="$1"
+[ -f /etc/default/seagate-nas2bay-boot ] && . /etc/default/seagate-nas2bay-boot
+KERNEL_PATTERN="${KERNEL_PATTERN:-6.1.*-armmp}"
+case "$KVER" in
+    $KERNEL_PATTERN) ;;
+    *) echo "seagate-nas2bay: kernel $KVER does not match '$KERNEL_PATTERN', uImage not rebuilt" >&2; exit 0 ;;
+esac
+[ "${SEAGATE_SKIP_MKUIMAGE:-0}" = 1 ] && exit 0
+exec /usr/sbin/seagate-mkuimage "$KVER"

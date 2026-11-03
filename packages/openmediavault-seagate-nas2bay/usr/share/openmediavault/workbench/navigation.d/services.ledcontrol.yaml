@@ -1,0 +1,8 @@
+version: "1.0"
+type: navigation-item
+data:
+  path: "services.ledcontrol"
+  text: _("LED & Night Mode")
+  icon: "mdi:led-on"
+  url: "/services/ledcontrol"
+  position: 6

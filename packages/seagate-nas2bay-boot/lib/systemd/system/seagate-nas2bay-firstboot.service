@@ -1,0 +1,14 @@
+[Unit]
+Description=Seagate NAS 2-Bay first boot setup (SSH keys, passwords, image resize, swap)
+ConditionPathExists=/etc/seagate-nas2bay/firstboot
+After=local-fs.target
+Before=ssh.service seagate-boot-healthcheck.service openmediavault-engined.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/seagate-nas2bay-firstboot
+RemainAfterExit=yes
+TimeoutStartSec=600
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,42 @@
+#!/bin/sh
+# initramfs-tools hook for the Seagate NAS 2-Bay loop-root boot.
+PREREQ=""
+prereqs() { echo "$PREREQ"; }
+case $1 in
+    prereqs) prereqs; exit 0 ;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+TPL=/usr/share/seagate-nas2bay-boot
+
+# Our /init (fail-safe rollback, RAID/LVM assembly, loop-mounted root image)
+# replaces the stock initramfs-tools /init. mkinitramfs copies its own /init
+# before running hooks, so overwriting it here is safe and survives upgrades.
+cp "$TPL/init" "${DESTDIR}/init"
+chmod 0755 "${DESTDIR}/init"
+
+mkdir -p "${DESTDIR}/etc/mdadm"
+cp "$TPL/ubootenv.slot0" "${DESTDIR}/etc/ubootenv.slot0"
+cp "$TPL/ubootenv.slot1" "${DESTDIR}/etc/ubootenv.slot1"
+[ -f /etc/mdadm/mdadm.conf ] && cp /etc/mdadm/mdadm.conf "${DESTDIR}/etc/mdadm/mdadm.conf"
+
+copy_exec /sbin/losetup /sbin/losetup
+copy_exec /sbin/mdadm /sbin/mdadm
+copy_exec /sbin/lvm /sbin/lvm
+copy_exec /sbin/blkid /sbin/blkid
+copy_exec /sbin/e2fsck /sbin/e2fsck
+copy_exec /bin/mount /bin/mount.util-linux
+
+for m in orion_wdt softdog sata_mv sd_mod md_mod raid1 dm_mod loop ext2 ext3 ext4 \
+         crc32c_generic mvmdio marvell mvneta gpio_fan leds_gpio gpio_keys gpio_poweroff; do
+    manual_add_modules "$m"
+done
+
+# Keep the initramfs small: GPU, media, wireless, sound are never needed here
+rm -rf "${DESTDIR}"/usr/lib/modules/*/kernel/drivers/gpu \
+       "${DESTDIR}"/usr/lib/modules/*/kernel/drivers/media \
+       "${DESTDIR}"/usr/lib/modules/*/kernel/drivers/net/wireless \
+       "${DESTDIR}"/usr/lib/modules/*/kernel/drivers/infiniband \
+       "${DESTDIR}"/usr/lib/modules/*/kernel/drivers/staging \
+       "${DESTDIR}"/usr/lib/modules/*/kernel/sound 2>/dev/null || true

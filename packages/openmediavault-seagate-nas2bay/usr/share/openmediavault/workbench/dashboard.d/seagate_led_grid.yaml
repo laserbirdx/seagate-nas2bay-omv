@@ -1,0 +1,25 @@
+version: "1.0"
+type: dashboard-widget
+data:
+  id: "94f3a810-4b2c-41ef-9a33-0010754e3220"
+  type: grid
+  reloadPeriod: 5000
+  permissions:
+    role:
+      - admin
+  title: _("Seagate LED & Night Mode (Cards)")
+  description: _("Displays live status of Power LEDs, Disk Sync LEDs and Hourly Night Mode Schedule.")
+  grid:
+    item:
+      content: '{{ led | translate }}<br><b>{{ state }}</b>'
+      tooltip: '{{ detail | translate }}'
+      class: 'omv-cursor-pointer omv-text-center omv-text-nowrap omv-background-color-pair-info'
+      url: '/services/ledcontrol'
+    store:
+      proxy:
+        service: LedControl
+        get:
+          method: getStatus
+      sorters:
+        - prop: order
+          dir: asc

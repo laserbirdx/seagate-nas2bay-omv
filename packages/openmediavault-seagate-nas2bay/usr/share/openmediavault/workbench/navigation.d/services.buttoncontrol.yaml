@@ -1,0 +1,8 @@
+version: "1.0"
+type: navigation-item
+data:
+  path: "services.buttoncontrol"
+  text: _("Chassis Buttons")
+  icon: "mdi:gesture-tap-button"
+  url: "/services/buttoncontrol"
+  position: 17

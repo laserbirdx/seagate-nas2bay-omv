@@ -1,0 +1,8 @@
+version: "1.0"
+type: navigation-item
+data:
+  path: "services.fancontrol"
+  text: _("Fan & Thermal")
+  icon: "mdi:fan"
+  url: "/services/fancontrol"
+  position: 5
