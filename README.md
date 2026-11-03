@@ -257,6 +257,11 @@ Debian prints its boot log and a login prompt on the same serial port.
 All plugins are native OMV 7 pages (no separate web server), use the OMV theme and
 are translated to English and Turkish.
 
+| **Hardware Overview** | **Fan & Thermal** | **LED & Night Mode** | **Chassis Buttons** |
+| :---: | :---: | :---: | :---: |
+| <img src="assets/plugin_dashboard.jpg" width="230" alt="Hardware Overview Widget"> | <img src="assets/plugin_fan.png" width="230" alt="Fan & Thermal Control"> | <img src="assets/plugin_led.png" width="230" alt="LED & Night Mode Control"> | <img src="assets/plugin_buttons.jpg" width="230" alt="Chassis Buttons & Backup"> |
+| *Hardware Overview Widget* | *Fan & Thermal Control* | *LED & Night Mode Control* | *Chassis Buttons & USB Backup* |
+
 ### Fan & Thermal — *Services → Fan & Thermal*
 - Automatic mode: CPU temperature thresholds for 950 / 1400 / 1800 RPM, fan off when cool.
 - Manual mode: fixed speed.
