@@ -1,0 +1,8 @@
+version: "1.0"
+type: route
+data:
+  url: "/services/raidcontrol"
+  title: _("RAID Resync & Speed Control")
+  editing: true
+  notificationTitle: _("RAID resync speed limits have been saved.")
+  component: omv-services-raidcontrol-form-page

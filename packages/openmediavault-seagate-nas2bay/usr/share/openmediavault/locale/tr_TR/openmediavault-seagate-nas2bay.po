@@ -438,3 +438,51 @@ msgstr "Hedef Paylaşım Klasörü"
 
 msgid "OpenMediaVault shared folder that will receive the USB backup files."
 msgstr "USB yedekleme dosyalarının kopyalanacağı OpenMediaVault paylaşım klasörü."
+
+msgid "OpenMediaVault shared folder that will receive the USB backup files."
+msgstr "USB yedekleme dosyalarının kopyalanacağı OpenMediaVault paylaşım klasörü."
+
+msgid "RAID Control"
+msgstr "RAID Kontrolü"
+
+msgid "RAID Resync & Speed Control"
+msgstr "RAID Senkronizasyon ve Hız Kontrolü"
+
+msgid "RAID Resync & Health"
+msgstr "RAID Senkronizasyon ve Sağlık"
+
+msgid "RAID resync speed limits have been saved."
+msgstr "RAID senkronizasyon hız sınırları kaydedildi."
+
+msgid "Live RAID Array & Resync Telemetry"
+msgstr "Canlı RAID Dizisi ve Senkronizasyon Durumu"
+
+msgid "Background Resync Speed Throttle (Persistent)"
+msgstr "Arka Plan Senkronizasyon Hız Sınırı (Kalıcı)"
+
+msgid "Minimum Resync Speed (MB/s)"
+msgstr "Minimum Senkronizasyon Hızı (MB/s)"
+
+msgid "Maximum Resync Speed (MB/s)"
+msgstr "Maksimum Senkronizasyon Hızı (MB/s)"
+
+msgid "Pause Resync"
+msgstr "Senkronizasyonu Duraklat"
+
+msgid "Resume Resync"
+msgstr "Senkronizasyonu Devam Ettir"
+
+msgid "Enable Internal Bitmap"
+msgstr "Dahili Bitmap Etkinleştir"
+
+msgid "Data RAID Array"
+msgstr "Veri RAID Dizisi"
+
+msgid "Resync / Sync Status"
+msgstr "Senkronizasyon Durumu"
+
+msgid "Resync Speed Limit"
+msgstr "Senkronizasyon Hız Sınırı"
+
+msgid "Write-Intent Bitmap"
+msgstr "Yazma Niyeti Bitmap'i"

@@ -1,0 +1,8 @@
+version: "1.0"
+type: navigation-item
+data:
+  path: "services.raidcontrol"
+  text: _("RAID Control")
+  icon: "mdi:harddisk"
+  url: "/services/raidcontrol"
+  position: 8

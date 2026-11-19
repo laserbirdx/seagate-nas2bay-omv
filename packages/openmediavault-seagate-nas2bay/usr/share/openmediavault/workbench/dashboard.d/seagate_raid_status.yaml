@@ -1,0 +1,37 @@
+version: "1.0"
+type: dashboard-widget
+data:
+  id: 7c41d9e2-6b3f-4a8e-9c12-219a7b4f0101
+  type: datatable
+  reloadPeriod: 5000
+  permissions:
+    role:
+      - admin
+  title: _("RAID Resync & Health")
+  description: _("Displays live RAID 1 resync progress, ETA, speed throttle limits, and write-intent bitmap status.")
+  datatable:
+    columns:
+      - name: _("Metric")
+        prop: metric
+        flexGrow: 2
+        sortable: false
+        cellTemplateName: template
+        cellTemplateConfig: '{{ metric | translate }}'
+      - name: _("Status / Value")
+        prop: value
+        flexGrow: 2
+        sortable: false
+      - name: _("Details")
+        prop: detail
+        flexGrow: 2
+        sortable: false
+        cellTemplateName: template
+        cellTemplateConfig: '{{ detail | translate }}'
+    store:
+      proxy:
+        service: RaidControl
+        get:
+          method: getStatus
+      sorters:
+        - prop: order
+          dir: asc

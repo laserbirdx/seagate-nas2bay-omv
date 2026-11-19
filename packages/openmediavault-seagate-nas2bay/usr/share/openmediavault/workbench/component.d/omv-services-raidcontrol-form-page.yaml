@@ -1,0 +1,70 @@
+version: "1.0"
+type: component
+data:
+  name: omv-services-raidcontrol-form-page
+  type: formPage
+  config:
+    request:
+      service: RaidControl
+      get:
+        method: getSettings
+      post:
+        method: setSettings
+    fields:
+      - type: textInput
+        name: live_status
+        label: _("Live RAID Array & Resync Telemetry")
+        readonly: true
+        submitValue: false
+      - type: divider
+        title: _("Background Resync Speed Throttle (Persistent)")
+      - type: numberInput
+        name: speed_limit_min_mb
+        label: _("Minimum Resync Speed (MB/s)")
+        hint: _("Guaranteed minimum background sync speed (default 5 MB/s).")
+        value: 5
+        validators:
+          min: 1
+          max: 150
+          required: true
+      - type: numberInput
+        name: speed_limit_max_mb
+        label: _("Maximum Resync Speed (MB/s)")
+        hint: _("Caps RAID resync bandwidth so SMB/NFS transfers stay fast (15-30 MB/s during use, 100+ MB/s overnight).")
+        value: 25
+        validators:
+          min: 5
+          max: 200
+          required: true
+    buttons:
+      - template: submit
+      - text: _("Pause Resync")
+        class: omv-background-color-pair-red
+        execute:
+          type: request
+          request:
+            service: RaidControl
+            method: pauseResync
+            progressMessage: _("Pausing RAID resync (frozen) ...")
+            successNotification: _("RAID resync has been paused.")
+      - text: _("Resume Resync")
+        class: omv-background-color-pair-blue
+        execute:
+          type: request
+          request:
+            service: RaidControl
+            method: resumeResync
+            progressMessage: _("Resuming RAID resync ...")
+            successNotification: _("RAID resync has been resumed.")
+      - text: _("Enable Internal Bitmap")
+        execute:
+          type: request
+          request:
+            service: RaidControl
+            method: enableBitmap
+            progressMessage: _("Enabling internal write-intent bitmap ...")
+            successNotification: _("Internal write-intent bitmap is now active.")
+      - template: cancel
+        execute:
+          type: url
+          url: /dashboard
