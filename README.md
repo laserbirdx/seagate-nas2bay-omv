@@ -4,7 +4,12 @@
 
 # Debian 12 + OpenMediaVault 7 for the Seagate NAS 2-Bay (SRPD20 / n090201)
 
-![OS: Debian 12 (Bookworm)](https://img.shields.io/badge/OS-Debian%2012%20(Bookworm)-A81D33?logo=debian&logoColor=white) ![NAS: OpenMediaVault 7](https://img.shields.io/badge/NAS-OpenMediaVault%207-3B78A7?logo=linux&logoColor=white) ![NAND: Untouched (Safe Fallback)](https://img.shields.io/badge/NAND-Untouched%20(Safe%20Fallback)-brightgreen) ![license: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)
+<p align="center">
+  <img src="https://img.shields.io/badge/OS-Debian%2012%20%28Bookworm%29-A81D33?logo=debian&logoColor=white" alt="OS: Debian 12 (Bookworm)" />
+  <img src="https://img.shields.io/badge/NAS-OpenMediaVault%207-3B78A7?logo=linux&logoColor=white" alt="NAS: OpenMediaVault 7" />
+  <img src="https://img.shields.io/badge/NAND-Untouched%20%28Safe%20Fallback%29-brightgreen" alt="NAND: Untouched (Safe Fallback)" />
+  <img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="license: GPL-3.0" />
+</p>
 
 Run a **current, maintained Debian 12 (bookworm) with OpenMediaVault 7** on the discontinued
 **Seagate NAS 2-Bay**, installed **from the factory NAS OS over SSH** — no NAND flashing,
